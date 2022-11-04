@@ -166,7 +166,7 @@ export default {
         { text: "ときどき", value: "rare3", sortable: false, width: 115, class: 'pl-1' },
         { text: "ご当地", value: "region", sortable: false, width: 60, class: 'pa-1' },
         { text: "よく", value: "rare2", sortable: false, width: 150, class: 'pl-1' },
-        { text: "とても", value: "rare1", sortable: false, width: 310, class: 'pl-1' },
+        { text: "とても", value: "rare1", sortable: false, width: 330, class: 'pl-1' },
       ],
       datas: [],
     }
