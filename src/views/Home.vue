@@ -1,52 +1,80 @@
 <template>  
-  <v-col>
-    <v-data-table
-      :headers="headers"
-      :items="datas"
-      :items-per-page="-1"
-      height="85vh"
-      fixed-header
-      hide-default-footer
-      mobile-breakpoint="100" 
-      class="elevation-1; fixed-column-table"
-    >
+  <v-container>
+    <v-row class="justify-end">
+      <v-col cols="auto" class="pb-0" >
+        <v-switch 
+          v-model="is_aheshiyu_show"
+          inset
+          label="あへしゆ"
+          @click="is_mikyan_show=false"></v-switch>
+      </v-col>
+      <v-col cols="auto" class="pb-0">
+        <v-switch 
+          v-model="is_mikyan_show"
+          inset
+          label="みきゃん"
+          @click="is_aheshiyu_show=false"></v-switch>
+      </v-col>
+    </v-row>
+    <v-col>
+      <v-data-table
+        :headers="headers"
+        :items="datas"
+        :items-per-page="-1"
+        height="80vh"
+        fixed-header
+        hide-default-footer
+        mobile-breakpoint="100" 
+        class="elevation-1; fixed-column-table"
+      >
 
-      <template v-slot:item.story="props">
-        <td class="pl-0 pr-0">
-          {{props.item.story}}
-        </td>
-      </template>
+        <!-- <template v-slot:header="{ props: { headers } }">
+          <thead>
+            <tr>
+              <th v-for="(h, key) in headers" :key="key" class="pa-1" style="width: 600px">
+                <span>{{h.text}}</span>
+              </th>
+            </tr>
+          </thead>
+        </template> -->
 
-      <template v-slot:item.rare1="props">
-        <kokoro :monster_list="props.item.rare1" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.story="props">
+          <td class="pl-0 pr-0 font-weight-medium">
+            {{props.item.story}}
+          </td>
+        </template>
 
-      <template v-slot:item.rare2="props">
-        <kokoro :monster_list="props.item.rare2" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.rare1="props">
+          <kokoro :monster_list="props.item.rare1" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
 
-      <template v-slot:item.rare3="props">
-        <kokoro :monster_list="props.item.rare3" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.rare2="props">
+          <kokoro :monster_list="props.item.rare2" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
 
-      <template v-slot:item.rare4="props">
-        <kokoro :monster_list="props.item.rare4" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.rare3="props">
+          <kokoro :monster_list="props.item.rare3" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
 
-      <template v-slot:item.rare5="props">
-        <kokoro :monster_list="props.item.rare5" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.rare4="props">
+          <kokoro :monster_list="props.item.rare4" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
 
-      <template v-slot:item.rare6="props">
-        <kokoro :monster_list="props.item.rare6" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.rare5="props">
+          <kokoro :monster_list="props.item.rare5" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
 
-      <template v-slot:item.region="props">
-        <kokoro :monster_list="props.item.region" class="pa-0"></kokoro>
-      </template>
+        <template v-slot:item.rare6="props">
+          <kokoro :monster_list="props.item.rare6" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
 
-    </v-data-table>
-  </v-col>
+        <template v-slot:item.region="props">
+          <kokoro :monster_list="props.item.region" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+        </template>
+
+      </v-data-table>
+    </v-col>
+  </v-container>
 </template>
 
 <script>
@@ -72,6 +100,8 @@ export default {
         { text: "とてもよく", value: "rare1", sortable: false, width: 330, class: 'pl-1' },
       ],
       datas: [],
+      is_aheshiyu_show: false,
+      is_mikyan_show: false,
     }
   },
 
