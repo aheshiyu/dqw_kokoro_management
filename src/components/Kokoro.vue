@@ -9,11 +9,11 @@
             :src="monster.image_path"
             :class="{ 'condition_night': monster.is_night, 'condition_rain': monster.is_rain }"
           ></v-img>
-          <v-progress-linear
+          <!-- <v-progress-linear
             v-if="show_type != 1"
             background-color="gray lighten-3"
             color="green lighten-1"
-            :value="(show_type == '2') ? monster.ratio_aheshiyu : monster.ratio_mikyan"></v-progress-linear>
+            :value="(show_type == '2') ? monster.ratio_aheshiyu : monster.ratio_mikyan"></v-progress-linear> -->
         </div>
       </v-col>
     </v-row>

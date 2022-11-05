@@ -52,6 +52,7 @@
         ></v-text-field>
         <v-text-field
           v-model="monster.num_a"
+          type="number"
           label="Aの個数"
           suffix="個"
           :rules="[required, plus_num]"
@@ -59,6 +60,7 @@
         ></v-text-field>
         <v-text-field
           v-model="monster.num_b"
+          type="number"
           label="Bの個数"
           suffix="個"
           :rules="[required, plus_num]"
