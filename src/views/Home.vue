@@ -1,22 +1,13 @@
 <template>  
   <v-container>
-    <v-row class="justify-end">
-      <v-col cols="auto" class="pb-0" >
-        <v-switch 
-          v-model="is_aheshiyu_show"
-          inset
-          label="あへしゆ"
-          @click="is_mikyan_show=false"></v-switch>
-      </v-col>
-      <v-col cols="auto" class="pb-0">
-        <v-switch 
-          v-model="is_mikyan_show"
-          inset
-          label="みきゃん"
-          @click="is_aheshiyu_show=false"></v-switch>
-      </v-col>
-    </v-row>
     <v-col>
+      <v-row class="justify-end">
+        <v-radio-group v-model="show_type" row>
+          <v-radio label="すべて"  value="1"></v-radio>
+          <v-radio label="あへしゆ" value="2"></v-radio>
+          <v-radio label="みきゃん" value="3"></v-radio>
+        </v-radio-group>
+      </v-row>
       <v-data-table
         :headers="headers"
         :items="datas"
@@ -45,31 +36,31 @@
         </template>
 
         <template v-slot:item.rare1="props">
-          <kokoro :monster_list="props.item.rare1" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.rare1" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare2="props">
-          <kokoro :monster_list="props.item.rare2" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.rare2" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare3="props">
-          <kokoro :monster_list="props.item.rare3" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.rare3" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare4="props">
-          <kokoro :monster_list="props.item.rare4" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.rare4" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare5="props">
-          <kokoro :monster_list="props.item.rare5" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.rare5" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare6="props">
-          <kokoro :monster_list="props.item.rare6" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.rare6" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.region="props">
-          <kokoro :monster_list="props.item.region" :is_aheshiyu_show="is_aheshiyu_show" :is_mikyan_show="is_mikyan_show" class="pa-0"></kokoro>
+          <Kokoro :monster_list="props.item.region" :show_type="show_type" class="pa-0"></Kokoro>
         </template>
 
       </v-data-table>
@@ -92,16 +83,15 @@ export default {
       headers: [
         { text: "", value: "story", sortable: false, width: 50 },
         { text: "めったに", value: "rare5", sortable: false, width: 60, class: 'pa-1' },
-        { text: "あまり", value: "rare4", sortable: false, width: 80, class: 'pl-1' },
-        { text: "メタル", value: "rare6", sortable: false, width: 80, class: 'pl-1' },
-        { text: "ときどき", value: "rare3", sortable: false, width: 120, class: 'pl-1' },
-        { text: "ご当地", value: "region", sortable: false, width: 50, class: 'pa-1' },
-        { text: "よく", value: "rare2", sortable: false, width: 150, class: 'pl-1' },
-        { text: "とてもよく", value: "rare1", sortable: false, width: 330, class: 'pl-1' },
+        { text: "あまり", value: "rare4", sortable: false, width: 90, class: 'pl-1' },
+        { text: "メタル", value: "rare6", sortable: false, width: 90, class: 'pl-1' },
+        { text: "ときどき", value: "rare3", sortable: false, width: 130, class: 'pl-1' },
+        { text: "ご当地", value: "region", sortable: false, width: 90, class: 'pa-1' },
+        { text: "よく", value: "rare2", sortable: false, width: 160, class: 'pl-1' },
+        { text: "とてもよく", value: "rare1", sortable: false, width: 340, class: 'pl-1' },
       ],
       datas: [],
-      is_aheshiyu_show: false,
-      is_mikyan_show: false,
+      show_type: "1",
     }
   },
 
@@ -118,6 +108,8 @@ export default {
         if (n == '') return
         let monster = raw_monster.find(m => n == m.monster_id)
         monster.image_path = require("../assets/" + monster.name + ".png")
+        monster.ratio_aheshiyu = monster.s_aheshiyu / 4 * 100
+        monster.ratio_mikyan = monster.s_mikyan / 4 * 100
         return monster
     }
 
