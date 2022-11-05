@@ -21,7 +21,7 @@
         :headers="headers"
         :items="datas"
         :items-per-page="-1"
-        height="80vh"
+        height="75vh"
         fixed-header
         hide-default-footer
         mobile-breakpoint="100" 
