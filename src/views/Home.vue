@@ -93,6 +93,7 @@ export default {
         { text: "とてもよく", value: "rare1", sortable: false, width: 340, class: 'pl-1' },
       ],
       datas: [],
+      monsters: [],
       show_type: "1",
     }
   },
@@ -126,7 +127,8 @@ export default {
       e.region = e.region.split(',').map(n => num2monster(n))
     })
     this.datas = raw_story.reverse()
-    // console.log(this.datas)
+    this.monsters = raw_monster
+    console.log(this.datas)
     console.log("data loaded")
 
     this.loading = false

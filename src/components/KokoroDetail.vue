@@ -150,7 +150,6 @@
         <v-btn
           color="primary lighten-1"
           text
-          disabled
           @click="register"
         >
           更新
@@ -171,7 +170,6 @@ export default {
   data() {
     return {
       show_dialog: false,
-      hoge: 0,
       monster: {
         image_path: "",
         name: "",
@@ -179,6 +177,7 @@ export default {
         is_rain: false,
         is_night: false,
       },
+      user: 0,
       num_s: 0,
       num_a: 0,
       num_b: 0,
@@ -201,12 +200,22 @@ export default {
       }
     },
 
-    open(monster) {
+    open(monster, user) {
       this.show_dialog = true
       this.monster = monster
-      this.num_s = monster.num_s
-      this.num_a = monster.num_a
-      this.num_b = monster.num_b
+      this.user = user
+      switch (user) {
+        case 2:
+          this.num_s = monster.s_aheshiyu
+          this.num_a = monster.a_aheshiyu
+          this.num_b = monster.b_aheshiyu
+          break
+        case 3:
+          this.num_s = monster.s_mikyan
+          this.num_a = monster.a_mikyan
+          this.num_b = monster.b_mikyan
+          break          
+      }
     },
 
     cancel() {
@@ -214,7 +223,21 @@ export default {
     },
 
     register() {
-
+      switch (this.user) {
+        case 2:
+          this.monster.s_aheshiyu = this.num_s
+          this.monster.a_aheshiyu = this.num_a
+          this.monster.b_aheshiyu = this.num_b
+          break
+        case 3:
+          this.monster.s_mikyan = this.num_s
+          this.monster.a_mikyan = this.num_a
+          this.monster.b_mikyan = this.num_b
+          break
+        default:
+          break
+      }
+      this.show_dialog = false
     },
   }
 }
