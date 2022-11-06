@@ -222,7 +222,7 @@ export default {
       this.show_dialog = false
     },
 
-    register() {
+    async register() {
       switch (this.user) {
         case 2:
           this.monster.s_aheshiyu = this.num_s
@@ -237,6 +237,7 @@ export default {
         default:
           break
       }
+      await this.$axios.update(this.monster)
       this.show_dialog = false
     },
   }

@@ -104,19 +104,19 @@ export default {
   async mounted() {
     this.loading = true
 
-    const res = await this.$axios.fetch()
+    const res = await this.$axios.fetch_monster()
+
     const raw_story = res.data.story
     const raw_monster = res.data.monster
-
     const num2monster = (n) => {
         if (n == '') return
         let monster = raw_monster.find(m => n == m.monster_id)
         monster.image_path = require("../assets/" + monster.name + ".png")
+        // monster.image_path = "/img/" + monster.name + ".png"
         // monster.ratio_aheshiyu = monster.s_aheshiyu / 4 * 100
         // monster.ratio_mikyan = monster.s_mikyan / 4 * 100
         return monster
     }
-
     raw_story.map(e => {
       e.rare1 = e.rare1.split(',').map(n => num2monster(n))
       e.rare2 = e.rare2.split(',').map(n => num2monster(n))
@@ -128,8 +128,9 @@ export default {
     })
     this.datas = raw_story.reverse()
     this.monsters = raw_monster
-    console.log(this.datas)
-    console.log("data loaded")
+
+    // console.log(this.datas)
+    console.log("data loaded!")
 
     this.loading = false
   }
