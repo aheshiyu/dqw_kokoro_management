@@ -39,36 +39,107 @@
 
       <v-divider class="mx-4"></v-divider>
 
-      <v-card-text
-        class="pt-5 pb-0"
-      >
-        <v-text-field
-          v-model="monster.num_s"
-          type="number"
-          label="Sの個数"
-          suffix="個"
-          :rules="[required, plus_num]"
-          prepend-icon="mdi-alpha-s-circle"
-        ></v-text-field>
-        <v-text-field
-          v-model="monster.num_a"
-          type="number"
-          label="Aの個数"
-          suffix="個"
-          :rules="[required, plus_num]"
-          prepend-icon="mdi-alpha-a-circle"
-        ></v-text-field>
-        <v-text-field
-          v-model="monster.num_b"
-          type="number"
-          label="Bの個数"
-          suffix="個"
-          :rules="[required, plus_num]"
-          prepend-icon="mdi-alpha-b-circle"
-        ></v-text-field>
+      <v-card-text class="pt-5 pb-0">
+        <v-row class="mt-2">
+          <v-img
+            max-height="50"
+            max-width="50"
+            src="../assets/stamp_s.png"
+          ></v-img>
+          <v-slider
+            v-model="num_s"
+            color="primary" track-color="grey"
+            ticks="always" tick-size="7"
+            thumb-label="always" :thumb-size="24"
+            min="0" max="4"
+            class="pt-3 pl-3"
+          >
+            <template v-slot:prepend>
+              <v-icon
+                color="primary"
+                @click="num_s = Math.max(num_s - 1, 0)"
+              >
+                mdi-minus
+              </v-icon>
+            </template>
+            <template v-slot:append>
+              <v-icon
+                color="primary"
+                @click="num_s = Math.min(num_s + 1, 4)"
+              >
+                mdi-plus
+              </v-icon>
+            </template>
+          </v-slider>
+        </v-row>
+        <v-row>
+          <v-img
+            max-height="50"
+            max-width="50"
+            src="../assets/stamp_a.png"
+          ></v-img>
+          <v-slider
+            v-model="num_a"
+            color="primary" track-color="grey"
+            ticks="always" tick-size="7"
+            thumb-label="always" :thumb-size="24"
+            min="0" max="3"
+            class="pt-3 pl-3"
+          >
+            <template v-slot:prepend>
+              <v-icon
+                color="primary"
+                @click="num_a = Math.max(num_a - 1, 0)"
+              >
+                mdi-minus
+              </v-icon>
+            </template>
+            <template v-slot:append>
+              <v-icon
+                color="primary"
+                @click="num_a = Math.min(num_a + 1, 3)"
+              >
+                mdi-plus
+              </v-icon>
+            </template>
+          </v-slider>
+        </v-row>
+        <v-row>
+          <v-img
+            max-height="50"
+            max-width="50"
+            src="../assets/stamp_b.png"
+
+          ></v-img>
+          <v-slider
+            v-model="num_b"
+            color="primary" track-color="grey"
+            ticks="always" tick-size="7"
+            thumb-label="always" :thumb-size="24"
+            min="0" max="2"
+            class="pt-3 pl-3"
+          >
+            <template v-slot:prepend>
+              <v-icon
+                color="primary"
+                @click="num_b = Math.max(num_b - 1, 0)"
+              >
+                mdi-minus
+              </v-icon>
+            </template>
+            <template v-slot:append>
+              <v-icon
+                color="primary"
+                @click="num_b = Math.min(num_b + 1, 2)"
+              >
+                mdi-plus
+              </v-icon>
+            </template>
+          </v-slider>
+        </v-row>
       </v-card-text>
 
-      <v-card-actions class="justify-end">
+      <v-card-actions class="justify-end pt-4">
         <v-btn
           color="primary lighten-2"
           text
@@ -100,16 +171,17 @@ export default {
   data() {
     return {
       show_dialog: false,
+      hoge: 0,
       monster: {
         image_path: "",
         name: "",
         monster_level: "",
         is_rain: false,
         is_night: false,
-        num_s: 0,
-        num_a: 0,
-        num_b: 0
       },
+      num_s: 0,
+      num_a: 0,
+      num_b: 0,
       loading: false,
       required: value => !!value || "数値を入力してください。",
       plus_num: value => value >= 0 || "正の数を入力してください。"
@@ -132,6 +204,9 @@ export default {
     open(monster) {
       this.show_dialog = true
       this.monster = monster
+      this.num_s = monster.num_s
+      this.num_a = monster.num_a
+      this.num_b = monster.num_b
     },
 
     cancel() {
@@ -140,7 +215,7 @@ export default {
 
     register() {
 
-    }
+    },
   }
 }
 </script>

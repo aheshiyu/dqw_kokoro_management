@@ -3,7 +3,7 @@
     <v-col>
       <v-row class="justify-end">
         <v-radio-group v-model="show_type" row>
-          <v-radio label="すべて"  value="1"></v-radio>
+          <v-radio label="すべて" value="1"></v-radio>
           <v-radio label="あへしゆ" value="2"></v-radio>
           <v-radio label="みきゃん" value="3"></v-radio>
         </v-radio-group>
@@ -16,6 +16,7 @@
         fixed-header
         hide-default-footer
         mobile-breakpoint="100" 
+        :loading="loading"
         class="elevation-1; fixed-column-table"
       >
 
@@ -80,6 +81,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       headers: [
         { text: "", value: "story", sortable: false, width: 50 },
         { text: "めったに", value: "rare5", sortable: false, width: 60, class: 'pa-1' },
@@ -96,10 +98,11 @@ export default {
   },
 
   methods: {
-
   },
 
   async mounted() {
+    this.loading = true
+
     const res = await this.$axios.fetch()
     const raw_story = res.data.story
     const raw_monster = res.data.monster
@@ -108,8 +111,8 @@ export default {
         if (n == '') return
         let monster = raw_monster.find(m => n == m.monster_id)
         monster.image_path = require("../assets/" + monster.name + ".png")
-        monster.ratio_aheshiyu = monster.s_aheshiyu / 4 * 100
-        monster.ratio_mikyan = monster.s_mikyan / 4 * 100
+        // monster.ratio_aheshiyu = monster.s_aheshiyu / 4 * 100
+        // monster.ratio_mikyan = monster.s_mikyan / 4 * 100
         return monster
     }
 
@@ -125,6 +128,8 @@ export default {
     this.datas = raw_story.reverse()
     // console.log(this.datas)
     console.log("data loaded")
+
+    this.loading = false
   }
 }
 </script>
