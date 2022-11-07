@@ -51,13 +51,13 @@ export default {
           monster.num_s = monster.s_aheshiyu
           monster.num_a = monster.a_aheshiyu
           monster.num_b = monster.b_aheshiyu
-          this.$refs.kokoroDetail.open(monster, 2)
+          this.$refs.kokoroDetail.open(monster, Number(this.show_type))
           break
         case "3":
           monster.num_s = monster.s_mikyan
           monster.num_a = monster.a_mikyan
           monster.num_b = monster.b_mikyan
-          this.$refs.kokoroDetail.open(monster, 3)
+          this.$refs.kokoroDetail.open(monster, Number(this.show_type))
           break
         default:
           break

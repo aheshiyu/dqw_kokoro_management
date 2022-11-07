@@ -109,7 +109,6 @@
             max-height="50"
             max-width="50"
             src="../assets/stamp_b.png"
-
           ></v-img>
           <v-slider
             v-model="num_b"
@@ -237,7 +236,7 @@ export default {
         default:
           break
       }
-      await this.$axios.update(this.monster)
+      await this.$axios.update({ monster: this.monster, user: this.user })
       this.show_dialog = false
     },
   }

@@ -13,13 +13,13 @@ const fetch_monster = () => {
   return gasApi.get(apiUrl)
 }
 
-const update = (monster) => {
+const update = (data) => {
   console.log("update!")
   fetch(apiUrl, {
     "method": "POST",
     "mode": "no-cors",
     "Content-Type": "application/x-www-form-urlencoded",
-    "body": JSON.stringify(monster)
+    "body": JSON.stringify(data)
   })
 }
 

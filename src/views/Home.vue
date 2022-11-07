@@ -121,7 +121,11 @@ export default {
     const num2monster = (n) => {
         if (n == '') return
         let monster = raw_monster.find(m => n == m.monster_id)
-        monster.image_path = require("../assets/" + monster.name + ".png")
+        try {
+          monster.image_path = require("../assets/" + monster.name + ".png")
+        } catch(e) {
+          monster.image_path = require("../assets/no_img.png")
+        }
         // monster.image_path = "/img/" + monster.name + ".png"
         // monster.ratio_aheshiyu = monster.s_aheshiyu / 4 * 100
         // monster.ratio_mikyan = monster.s_mikyan / 4 * 100
@@ -139,7 +143,7 @@ export default {
     this.datas = raw_story.reverse()
     this.monsters = raw_monster
 
-    // console.log(this.datas)
+    console.log(this.datas)
     console.log("data loaded!")
 
     this.loading = false
