@@ -3,9 +3,9 @@
     <v-col>
       <v-row class="justify-end">
         <v-radio-group v-model="show_type" row>
-          <v-radio label="すべて" value="1"></v-radio>
-          <v-radio label="あへしゆ" value="2"></v-radio>
-          <v-radio label="みきゃん" value="3"></v-radio>
+          <v-radio label="すべて" value="1" @click="save_show_type"></v-radio>
+          <v-radio label="あへしゆ" value="2" @click="save_show_type"></v-radio>
+          <v-radio label="みきゃん" value="3" @click="save_show_type"></v-radio>
         </v-radio-group>
       </v-row>
       <v-data-table
@@ -94,16 +94,26 @@ export default {
       ],
       datas: [],
       monsters: [],
-      show_type: "1",
+      show_type: null,
     }
   },
 
   methods: {
+    save_show_type() {
+      localStorage.setItem('show_type', this.show_type)
+    }
   },
 
   async mounted() {
     this.loading = true
 
+    const show_type = localStorage.getItem('show_type')
+    if (show_type) {
+      this.show_type = show_type
+    } else {
+      this.show_type = "1"
+    }
+    
     const res = await this.$axios.fetch_monster()
 
     const raw_story = res.data.story
