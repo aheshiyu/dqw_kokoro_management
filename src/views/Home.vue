@@ -143,7 +143,7 @@ export default {
     this.datas = raw_story.reverse()
     this.monsters = raw_monster
 
-    console.log(this.datas)
+    // console.log(this.datas)
     console.log("data loaded!")
 
     this.loading = false

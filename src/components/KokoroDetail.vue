@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="show_dialog"
+    persistent
     max-width="400"
   >
     <v-card
@@ -142,7 +143,7 @@
         <v-btn
           color="primary lighten-2"
           text
-          @click="cancel"
+          @click="close(true)"
         >
           キャンセル
         </v-btn>
@@ -155,15 +156,18 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <Confirm ref="confirm" @parentMethod="close"></Confirm>
   </v-dialog>
 </template>
 
 <script>
+import Confirm from '../components/Confirm.vue'
+
 export default {
   name: 'KokoroDetail',
 
   components: {
-        
+    Confirm
   },
 
   data() {
@@ -180,9 +184,10 @@ export default {
       num_s: 0,
       num_a: 0,
       num_b: 0,
+      initial_num_s: 0,
+      initial_num_a: 0,
+      initial_num_b: 0,
       loading: false,
-      required: value => !!value || "数値を入力してください。",
-      plus_num: value => value >= 0 || "正の数を入力してください。"
     }
   },
 
@@ -215,10 +220,23 @@ export default {
           this.num_b = monster.b_mikyan
           break          
       }
+      this.initial_num_s = this.num_s
+      this.initial_num_a = this.num_a
+      this.initial_num_b = this.num_b
     },
 
-    cancel() {
-      this.show_dialog = false
+    close(confirm) {
+      if (confirm) {
+        if ((this.num_s != this.initial_num_s) || 
+            (this.num_a != this.initial_num_a) || 
+            (this.num_b != this.initial_num_b)) {
+          this.$refs.confirm.confirm()
+        } else {
+          this.show_dialog = false
+        }
+      } else {
+        this.show_dialog = false
+      }
     },
 
     async register() {
