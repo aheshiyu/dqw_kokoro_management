@@ -59,7 +59,7 @@
     <v-snackbar
       v-model="snackbar"
       color="success"
-      :timeout="2000"
+      class="mb-8"
     >
       <v-row align="center">
         <v-col cols="auto" class="pr-0">
