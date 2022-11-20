@@ -206,6 +206,7 @@ export default {
 
     open(monster, user) {
       this.show_dialog = true
+      this.$emit('child_snackbar', false)
       this.monster = monster
       this.user = user
       switch (user) {
@@ -225,11 +226,19 @@ export default {
       this.initial_num_b = this.num_b
     },
 
+    is_change() {
+      let result = false
+      if ((this.num_s != this.initial_num_s) || 
+          (this.num_a != this.initial_num_a) || 
+          (this.num_b != this.initial_num_b)) {
+        result = true
+      }
+      return result
+    },
+
     close(confirm) {
       if (confirm) {
-        if ((this.num_s != this.initial_num_s) || 
-            (this.num_a != this.initial_num_a) || 
-            (this.num_b != this.initial_num_b)) {
+        if (this.is_change()) {
           this.$refs.confirm.confirm()
         } else {
           this.show_dialog = false
@@ -240,21 +249,24 @@ export default {
     },
 
     async register() {
-      switch (this.user) {
-        case 2:
-          this.monster.s_aheshiyu = this.num_s
-          this.monster.a_aheshiyu = this.num_a
-          this.monster.b_aheshiyu = this.num_b
-          break
-        case 3:
-          this.monster.s_mikyan = this.num_s
-          this.monster.a_mikyan = this.num_a
-          this.monster.b_mikyan = this.num_b
-          break
-        default:
-          break
+      this.$emit('child_snackbar', true)
+      if (this.is_change()) {
+        switch (this.user) {
+          case 2:
+            this.monster.s_aheshiyu = this.num_s
+            this.monster.a_aheshiyu = this.num_a
+            this.monster.b_aheshiyu = this.num_b
+            break
+          case 3:
+            this.monster.s_mikyan = this.num_s
+            this.monster.a_mikyan = this.num_a
+            this.monster.b_mikyan = this.num_b
+            break
+          default:
+            break
+        }
+        await this.$axios.update({ monster: this.monster, user: this.user })
       }
-      await this.$axios.update({ monster: this.monster, user: this.user })
       this.show_dialog = false
     },
   }

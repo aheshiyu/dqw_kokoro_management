@@ -9,15 +9,10 @@
             :src="monster.image_path"
             :class="{ 'condition_night': monster.is_night, 'condition_rain': monster.is_rain }"
           ></v-img>
-          <!-- <v-progress-linear
-            v-if="show_type != 1"
-            background-color="gray lighten-3"
-            color="green lighten-1"
-            :value="(show_type == '2') ? monster.ratio_aheshiyu : monster.ratio_mikyan"></v-progress-linear> -->
         </div>
       </v-col>
     </v-row>
-    <KokoroDetail ref="kokoroDetail"></KokoroDetail>
+    <KokoroDetail ref="kokoroDetail" @child_snackbar="child_snackbar"></KokoroDetail>
   </v-container>
 </template>
 
@@ -62,6 +57,9 @@ export default {
         default:
           break
       }
+    },
+    child_snackbar(flag) {
+      this.$emit('parent_snackbar', flag)
     }
   }
 }

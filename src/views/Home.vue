@@ -20,16 +20,6 @@
         class="elevation-1; fixed-column-table"
       >
 
-        <!-- <template v-slot:header="{ props: { headers } }">
-          <thead>
-            <tr>
-              <th v-for="(h, key) in headers" :key="key" class="pa-1" style="width: 600px">
-                <span>{{h.text}}</span>
-              </th>
-            </tr>
-          </thead>
-        </template> -->
-
         <template v-slot:item.story="props">
           <td class="pl-0 pr-0 font-weight-medium">
             {{props.item.story}}
@@ -37,35 +27,59 @@
         </template>
 
         <template v-slot:item.rare1="props">
-          <Kokoro :monster_list="props.item.rare1" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.rare1" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare2="props">
-          <Kokoro :monster_list="props.item.rare2" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.rare2" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare3="props">
-          <Kokoro :monster_list="props.item.rare3" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.rare3" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare4="props">
-          <Kokoro :monster_list="props.item.rare4" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.rare4" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare5="props">
-          <Kokoro :monster_list="props.item.rare5" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.rare5" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.rare6="props">
-          <Kokoro :monster_list="props.item.rare6" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.rare6" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
         <template v-slot:item.region="props">
-          <Kokoro :monster_list="props.item.region" :show_type="show_type" class="pa-0"></Kokoro>
+          <Kokoro :monster_list="props.item.region" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
         </template>
 
       </v-data-table>
     </v-col>
+    <v-snackbar
+      v-model="snackbar"
+      color="success"
+      :timeout="2000"
+    >
+      <v-row align="center">
+        <v-col cols="auto" class="pr-0">
+          <v-icon small>mdi-check-circle</v-icon>
+        </v-col>
+        <v-col cols="auto">
+          <p class="mb-0">更新しました。</p>
+        </v-col>
+      </v-row>
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          icon 
+          color="white"
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -82,6 +96,7 @@ export default {
   data() {
     return {
       loading: false,
+      snackbar: false,
       headers: [
         { text: "", value: "story", sortable: false, width: 50 },
         { text: "めったに", value: "rare5", sortable: false, width: 60, class: 'pa-1' },
@@ -101,6 +116,9 @@ export default {
   methods: {
     save_show_type() {
       localStorage.setItem('show_type', this.show_type)
+    },
+    set_snackbar(flag) {
+      this.snackbar = flag
     }
   },
 
@@ -127,8 +145,6 @@ export default {
           monster.image_path = require("../assets/no_img.png")
         }
         // monster.image_path = "/img/" + monster.name + ".png"
-        // monster.ratio_aheshiyu = monster.s_aheshiyu / 4 * 100
-        // monster.ratio_mikyan = monster.s_mikyan / 4 * 100
         return monster
     }
     raw_story.map(e => {
