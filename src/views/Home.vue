@@ -15,9 +15,10 @@
         height="75vh"
         fixed-header
         hide-default-footer
-        mobile-breakpoint="100" 
+        mobile-breakpoint="100"
         :loading="loading"
-        class="elevation-1; fixed-column-table"
+        loading-text="読込中"
+        class="elevation-1 fixed-column-table"
       >
 
         <template v-slot:item.story="props">

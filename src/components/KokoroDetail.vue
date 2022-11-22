@@ -4,16 +4,7 @@
     persistent
     max-width="400"
   >
-    <v-card
-      :loading="loading"
-    >
-      <template slot="progress">
-        <v-progress-linear
-          color="primary"
-          height="10"
-          indeterminate
-        ></v-progress-linear>
-      </template>
+    <v-card>
 
       <div class="pt-5">
         <v-img
@@ -143,7 +134,7 @@
         <v-btn
           color="primary lighten-2"
           text
-          @click="close(true)"
+          @click="close"
         >
           キャンセル
         </v-btn>
@@ -156,7 +147,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <Confirm ref="confirm" @parentMethod="close"></Confirm>
+    <Confirm ref="confirm"></Confirm>
   </v-dialog>
 </template>
 
@@ -187,7 +178,6 @@ export default {
       initial_num_s: 0,
       initial_num_a: 0,
       initial_num_b: 0,
-      loading: false,
     }
   },
 
@@ -236,11 +226,9 @@ export default {
       return result
     },
 
-    close(confirm) {
-      if (confirm) {
-        if (this.is_change()) {
-          this.$refs.confirm.confirm()
-        } else {
+    async close() {
+      if (this.is_change()) {
+        if (await this.$refs.confirm.confirm('本当にキャンセルしますか？', 'こころの数が変更されています。')) {
           this.show_dialog = false
         }
       } else {

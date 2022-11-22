@@ -1,8 +1,15 @@
 <template>
   <v-container>
     <v-row>
-      <v-col v-for="(monster, key) in monster_list" :key="key" class="pa-0" cols=auto>
-        <div v-if="monster" @click="onClickDetail(monster)" :class="{ 'is_hidden': (show_type == 2 && monster.s_aheshiyu >= 4) || (show_type == 3 && monster.s_mikyan >= 4) }">
+      <v-col
+        v-for="(monster, key) in monster_list"
+        :key="key"
+        class="pa-0"
+        cols=auto>
+        <div
+          v-if="monster"
+          @click="onClickDetail(monster)"
+          :class="{ 'is_hidden': (show_type == 2 && monster.s_aheshiyu >= 4) || (show_type == 3 && monster.s_mikyan >= 4) }">
           <v-img
             max-height="35"
             max-width="35"

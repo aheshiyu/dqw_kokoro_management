@@ -6,22 +6,22 @@
   >
     <v-card>
       <v-card-title class="text-h6 text-weight-black">
-        本当にキャンセルしますか？
+        {{ title }}
       </v-card-title>
-      <v-card-text>こころの数が変更されています。</v-card-text>
+      <v-card-text>{{ message }}</v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="green darken-1"
+          color="primary lighten-1"
           text
-          @click="show_confirm=false"
+          @click="$emit('answer', false)"
         >
           いいえ
         </v-btn>
         <v-btn
-          color="green darken-1"
+          color="primary lighten-2"
           text
-          @click="cancel_yes"
+          @click="$emit('answer', true)"
         >
           はい
         </v-btn>
@@ -36,18 +36,24 @@ export default {
 
   data() {
     return {
+      title: '',
+      message: '',
       show_confirm: false,
     }
   },
 
   methods: {
-    confirm() {
+    confirm(title, message) {
+      this.title = title
+      this.message = message
       this.show_confirm = true
+      return new Promise(resolve => {
+        this.$once('answer', confirm_value => {
+          this.show_confirm = false
+          resolve(confirm_value)
+        })
+      })
     },
-    cancel_yes() {
-      this.$emit('parentMethod', false)
-      this.show_confirm = false
-    }
   }
 }
 </script>
