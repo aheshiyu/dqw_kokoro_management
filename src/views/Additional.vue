@@ -279,7 +279,7 @@ export default {
       loading: false,
       monsters: [],
       setting: {
-        user: null,
+        user: 2,
       },
       snackbar_settings: {
         snackbar: false,

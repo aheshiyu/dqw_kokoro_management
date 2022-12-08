@@ -8,7 +8,7 @@
       <v-text-field
         label="API URL"
         v-model="api_url"
-        color="light-green darken-1"
+        color="light-blue darken-1"
         :rules="[required]"
       ></v-text-field>
       <v-row justify="end" class="pt-4">

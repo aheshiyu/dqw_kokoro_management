@@ -111,7 +111,7 @@ export default {
       datas: [],
       monsters: [],
       setting: {
-        user: null,
+        user: 1,
       },
     }
   },
