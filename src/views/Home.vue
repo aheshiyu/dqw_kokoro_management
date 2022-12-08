@@ -2,10 +2,10 @@
   <v-container>
     <v-col>
       <v-row class="justify-end">
-        <v-radio-group v-model="show_type" row>
-          <v-radio label="すべて" value="1" @click="save_show_type"></v-radio>
-          <v-radio label="あへしゆ" value="2" @click="save_show_type"></v-radio>
-          <v-radio label="みきゃん" value="3" @click="save_show_type"></v-radio>
+        <v-radio-group v-model="setting.user" row>
+          <v-radio label="すべて" value="1" @click="save_setting"></v-radio>
+          <v-radio label="あへしゆ" value="2" @click="save_setting"></v-radio>
+          <v-radio label="みきゃん" value="3" @click="save_setting"></v-radio>
         </v-radio-group>
       </v-row>
       <v-data-table
@@ -17,42 +17,42 @@
         hide-default-footer
         mobile-breakpoint="100"
         :loading="loading"
-        loading-text="読込中"
+        loading-text="読込中..."
         class="elevation-1 fixed-column-table"
       >
 
         <template v-slot:item.story="props">
           <td class="pl-0 pr-0 font-weight-medium">
-            {{props.item.story}}
+            {{ props.item.story }}
           </td>
         </template>
 
         <template v-slot:item.rare1="props">
-          <Kokoro :monster_list="props.item.rare1" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.rare1" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
         <template v-slot:item.rare2="props">
-          <Kokoro :monster_list="props.item.rare2" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.rare2" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
         <template v-slot:item.rare3="props">
-          <Kokoro :monster_list="props.item.rare3" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.rare3" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
         <template v-slot:item.rare4="props">
-          <Kokoro :monster_list="props.item.rare4" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.rare4" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
         <template v-slot:item.rare5="props">
-          <Kokoro :monster_list="props.item.rare5" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.rare5" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
         <template v-slot:item.rare6="props">
-          <Kokoro :monster_list="props.item.rare6" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.rare6" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
         <template v-slot:item.region="props">
-          <Kokoro :monster_list="props.item.region" :show_type="show_type" @parent_snackbar="set_snackbar" class="pa-0"></Kokoro>
+          <Row :monster_list="props.item.region" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
         </template>
 
       </v-data-table>
@@ -85,13 +85,13 @@
 </template>
 
 <script>
-import Kokoro from "../components/Kokoro.vue"
+import Row from "@/components/Row.vue"
 
 export default {
   name: 'Home',
 
   components: {
-    Kokoro
+    Row
   },
 
   data() {
@@ -110,13 +110,18 @@ export default {
       ],
       datas: [],
       monsters: [],
-      show_type: null,
+      setting: {
+        user: null,
+      },
     }
   },
 
   methods: {
-    save_show_type() {
-      localStorage.setItem('show_type', this.show_type)
+    save_setting() {
+      this.$store.dispatch({
+        type: 'save_setting',
+        setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
+      })
     },
     set_snackbar(flag) {
       this.snackbar = flag
@@ -126,24 +131,19 @@ export default {
   async mounted() {
     this.loading = true
 
-    const show_type = localStorage.getItem('show_type')
-    if (show_type) {
-      this.show_type = show_type
-    } else {
-      this.show_type = "1"
-    }
+    this.setting = { ...this.$store.state.setting }
     
-    const res = await this.$axios.fetch_monster()
+    const res = await this.$gas.get_story()
 
-    const raw_story = res.data.story
-    const raw_monster = res.data.monster
+    const raw_story = res.story
+    const raw_monster = res.monster
     const num2monster = (n) => {
         if (n == '') return
         let monster = raw_monster.find(m => n == m.monster_id)
         try {
-          monster.image_path = require("../assets/" + monster.name + ".png")
+          monster.image_path = require("@/assets/" + monster.name + ".png")
         } catch(e) {
-          monster.image_path = require("../assets/no_img.png")
+          monster.image_path = require("@/assets/no_img.png")
         }
         // monster.image_path = "/img/" + monster.name + ".png"
         return monster
@@ -164,6 +164,9 @@ export default {
     console.log("data loaded!")
 
     this.loading = false
+  },
+  beforeCreate() {
+    this.$store.dispatch('load_setting')
   }
 }
 </script>

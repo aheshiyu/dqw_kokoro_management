@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify'
 import gasApi from './api' // 追加
 
 Vue.config.productionTip = false
-Vue.prototype.$axios = gasApi // 追加
+Vue.prototype.$gas = gasApi // 追加
 
 new Vue({
   router,

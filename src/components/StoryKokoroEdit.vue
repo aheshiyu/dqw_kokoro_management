@@ -32,11 +32,11 @@
       <v-divider class="mx-4"></v-divider>
 
       <v-card-text class="pt-5 pb-0">
-        <v-row class="mt-2">
+        <v-row class="mt-2 pl-3">
           <v-img
             max-height="50"
             max-width="50"
-            src="../assets/stamp_s.png"
+            src="@/assets/stamp_s.png"
           ></v-img>
           <v-slider
             v-model="num_s"
@@ -44,31 +44,15 @@
             ticks="always" tick-size="7"
             thumb-label="always" :thumb-size="24"
             min="0" max="4"
-            class="pt-3 pl-3"
+            class="pt-3 px-6"
           >
-            <template v-slot:prepend>
-              <v-icon
-                color="primary"
-                @click="num_s = Math.max(num_s - 1, 0)"
-              >
-                mdi-minus
-              </v-icon>
-            </template>
-            <template v-slot:append>
-              <v-icon
-                color="primary"
-                @click="num_s = Math.min(num_s + 1, 4)"
-              >
-                mdi-plus
-              </v-icon>
-            </template>
           </v-slider>
         </v-row>
-        <v-row>
+        <v-row class="pl-3">
           <v-img
             max-height="50"
             max-width="50"
-            src="../assets/stamp_a.png"
+            src="@/assets/stamp_a.png"
           ></v-img>
           <v-slider
             v-model="num_a"
@@ -76,31 +60,15 @@
             ticks="always" tick-size="7"
             thumb-label="always" :thumb-size="24"
             min="0" max="3"
-            class="pt-3 pl-3"
+            class="pt-3 px-6"
           >
-            <template v-slot:prepend>
-              <v-icon
-                color="primary"
-                @click="num_a = Math.max(num_a - 1, 0)"
-              >
-                mdi-minus
-              </v-icon>
-            </template>
-            <template v-slot:append>
-              <v-icon
-                color="primary"
-                @click="num_a = Math.min(num_a + 1, 3)"
-              >
-                mdi-plus
-              </v-icon>
-            </template>
           </v-slider>
         </v-row>
-        <v-row>
+        <v-row class="pl-3">
           <v-img
             max-height="50"
             max-width="50"
-            src="../assets/stamp_b.png"
+            src="@/assets/stamp_b.png"
           ></v-img>
           <v-slider
             v-model="num_b"
@@ -108,24 +76,8 @@
             ticks="always" tick-size="7"
             thumb-label="always" :thumb-size="24"
             min="0" max="2"
-            class="pt-3 pl-3"
+            class="pt-3 px-6"
           >
-            <template v-slot:prepend>
-              <v-icon
-                color="primary"
-                @click="num_b = Math.max(num_b - 1, 0)"
-              >
-                mdi-minus
-              </v-icon>
-            </template>
-            <template v-slot:append>
-              <v-icon
-                color="primary"
-                @click="num_b = Math.min(num_b + 1, 2)"
-              >
-                mdi-plus
-              </v-icon>
-            </template>
           </v-slider>
         </v-row>
       </v-card-text>
@@ -152,10 +104,10 @@
 </template>
 
 <script>
-import Confirm from '../components/Confirm.vue'
+import Confirm from '@/components/Confirm.vue'
 
 export default {
-  name: 'KokoroDetail',
+  name: 'StoryKokoroEdit',
 
   components: {
     Confirm
@@ -253,7 +205,7 @@ export default {
           default:
             break
         }
-        await this.$axios.update({ monster: this.monster, user: this.user })
+        await this.$gas.update_story(''+this.user, this.monster)  // ユーザIDは文字列に変更（GAS内の処理のため）
       }
       this.show_dialog = false
     },

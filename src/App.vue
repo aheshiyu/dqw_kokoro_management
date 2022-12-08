@@ -5,7 +5,22 @@
       color="primary"
       dark
     >
-      <v-toolbar-title>ストーリー別モンスター一覧</v-toolbar-title>
+      <v-toolbar-title>こころ所持数管理</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn icon to="/">
+        <v-icon>mdi-bookmark</v-icon>
+      </v-btn>
+
+      <v-btn icon to="/additional">
+        <v-icon>mdi-shape-circle-plus</v-icon>
+      </v-btn>
+
+      <v-btn icon to="/setting">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
+
     </v-app-bar>
 
     <v-main>
@@ -19,8 +34,13 @@
 export default {
   name: 'App',
 
-  data: () => ({
-    //
-  }),
-};
+  data() {
+    return {
+
+    }
+  },
+
+  methods: {
+  },
+}
 </script>
