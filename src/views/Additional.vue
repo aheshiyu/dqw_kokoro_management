@@ -23,7 +23,7 @@
       </p>
       <draggable
         v-model="monsters"
-        :options="{animation: 150, delay: 0, handle: '.handle'}"
+        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
         @end="drag_update"
         class="mb-8"
       >
@@ -42,6 +42,12 @@
                 <v-icon>mdi-drag-horizontal</v-icon>
               </v-col>
               <v-col cols=7>
+                <v-row>
+                  <v-col cols=auto>
+                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
+                  </v-col>
+                </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
               <v-col cols=auto>
@@ -64,14 +70,14 @@
       </draggable>
 
       <p
-        v-if="!loading && filter_megamon.length!=0"
+        v-if="!loading && filter_hokora.length!=0"
         class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl"
       >
-        メガモン
+        ほこら
       </p>
       <draggable
         v-model="monsters"
-        :options="{animation: 150, delay: 0, handle: '.handle'}"
+        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
         @end="drag_update"
         class="mb-8"
       >
@@ -81,7 +87,7 @@
           class="pa-0"
         >
           <v-card
-            v-if="monster.type == 'メガモン'"
+            v-if="monster.type == 'ほこら'"
             elevation="0"
             class="pa-3 pb-0"
           >
@@ -90,6 +96,12 @@
                 <v-icon>mdi-drag-horizontal</v-icon>
               </v-col>
               <v-col cols=7>
+                <v-row>
+                  <v-col cols=auto>
+                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
+                  </v-col>
+                </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
               <v-col cols=auto>
@@ -119,7 +131,7 @@
       </p>
       <draggable
         v-model="monsters"
-        :options="{animation: 150, delay: 0, handle: '.handle'}"
+        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
         @end="drag_update"
         class="mb-8"
       >
@@ -138,6 +150,66 @@
                 <v-icon>mdi-drag-horizontal</v-icon>
               </v-col>
               <v-col cols=7>
+                <v-row>
+                  <v-col cols=auto>
+                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
+                  </v-col>
+                </v-row>
+                <p class="mb-0">{{ monster.name }}</p>
+              </v-col>
+              <v-col cols=auto>
+                <v-row>
+                  <v-col cols=auto class="pr-0">
+                    <v-btn icon @click="edit_monster(monster)">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols=auto class="pl-0">
+                    <v-btn icon @click="delete_monster(monster)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </draggable>
+
+      <p
+        v-if="!loading && filter_megamon.length!=0"
+        class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl"
+      >
+        メガモン
+      </p>
+      <draggable
+        v-model="monsters"
+        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
+        @end="drag_update"
+        class="mb-8"
+      >
+        <v-col
+          v-for="(monster, key) in monsters"
+          :key="key"
+          class="pa-0"
+        >
+          <v-card
+            v-if="monster.type == 'メガモン'"
+            elevation="0"
+            class="pa-3 pb-0"
+          >
+            <v-row align="center" justify="space-between">
+              <v-col cols=auto class="handle">
+                <v-icon>mdi-drag-horizontal</v-icon>
+              </v-col>
+              <v-col cols=7>
+                <v-row>
+                  <v-col cols=auto>
+                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
+                  </v-col>
+                </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
               <v-col cols=auto>
@@ -167,7 +239,7 @@
       </p>
       <draggable
         v-model="monsters"
-        :options="{animation: 150, delay: 0, handle: '.handle'}"
+        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
         @end="drag_update"
         class="mb-8"
       >
@@ -186,6 +258,12 @@
                 <v-icon>mdi-drag-horizontal</v-icon>
               </v-col>
               <v-col cols=7>
+                <v-row>
+                  <v-col cols=auto>
+                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
+                  </v-col>
+                </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
               <v-col cols=auto>
@@ -297,6 +375,10 @@ export default {
       // console.log(this.monsters.filter(e => e.type == 'メガモン'))
       return this.monsters.filter(e => e.type == 'メガモン')
     },
+    filter_hokora: function() {
+      // console.log(this.monsters.filter(e => e.type == 'ほこら'))
+      return this.monsters.filter(e => e.type == 'ほこら')
+    },
     filter_event: function() {
       // console.log(this.monsters.filter(e => e.type == 'イベント'))
       return this.monsters.filter(e => e.type == 'イベント')
@@ -326,6 +408,8 @@ export default {
       const new_monster = {
         id: '',
         name: '',
+        cost: 1,
+        color: 'blue-grey darken-1',
         type: 'その他',
         num_s: 0,
         num_a: 0,

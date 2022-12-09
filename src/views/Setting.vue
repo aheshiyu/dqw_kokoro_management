@@ -33,7 +33,30 @@
       <li>「ウェブアプリ」の項目にあるURLがAPI URL</li>
     </ol>
     <p>※API URL設定後はページ更新が必要</p>
-    <v-snackbar v-model="is_save" class="mb-5">保存しました。</v-snackbar>
+    <v-snackbar
+      v-model="is_save"
+      color="success"
+      class="mb-5"
+    >
+      <v-row align="center">
+        <v-col cols="auto" class="pr-0">
+          <v-icon small>mdi-check-circle</v-icon>
+        </v-col>
+        <v-col cols="auto">
+          <p class="mb-0">保存しました。</p>
+        </v-col>
+      </v-row>
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          icon 
+          color="white"
+          v-bind="attrs"
+          @click="is_save = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
