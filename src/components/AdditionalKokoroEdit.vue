@@ -13,29 +13,34 @@
         <v-card-text>
           <v-text-field
             v-model="monster.name"
-            label="モンスター名"
+            label="モンスター名*"
             color="light-blue darken-1"
             :rules="[required]"
           ></v-text-field>
           <v-row>
             <v-col>
-              <v-select
+              <v-text-field
                 v-model="monster.cost"
-                :items="cost_list"
-                label="コスト"
-              ></v-select>
+                label="コスト*"
+                type="number"
+                color="light-blue darken-1"
+                :rules="[required, is_plus]"
+              ></v-text-field>
             </v-col>
             <v-col cols=3>
               <v-select
                 v-model="monster.color"
                 :items="color_list"
-                label="色"
+                label="色*"
+                :rules="[required]"
               >
                 <template v-slot:selection="{ item }">
-                  <v-icon :color="item">mdi-checkbox-blank-circle</v-icon>
+                  <v-icon v-if="item=='rainbow'" color="orange">mdi-looks</v-icon>
+                  <v-icon v-else :color="item">mdi-checkbox-blank-circle</v-icon>
                 </template>
                 <template v-slot:item="{ item }">
-                  <v-icon :color="item">mdi-checkbox-blank-circle</v-icon>
+                  <v-icon v-if="item=='rainbow'" color="orange">mdi-looks</v-icon>
+                  <v-icon v-else :color="item">mdi-checkbox-blank-circle</v-icon>
                 </template>
               </v-select>
             </v-col>
@@ -43,7 +48,8 @@
               <v-select
                 v-model="monster.type"
                 :items="monster_type"
-                label="種類"
+                label="種類*"
+                :rules="[required]"
               ></v-select>
             </v-col>
           </v-row>
@@ -177,7 +183,7 @@ export default {
   name: 'AdditionalKokoroEdit',
 
   components: {
-    Confirm
+    Confirm,
   },
 
   data() {
@@ -189,8 +195,8 @@ export default {
       monster: {
         id: '',
         name: '',
-        cost: 1,
-        color: 'blue-grey darken-1',
+        cost: '',
+        color: '',
         type: null,
         num_s: 0,
         num_a: 0,
@@ -201,14 +207,18 @@ export default {
       },
       initial_monster: null,
       user: null,
-      cost_list: [...Array(300)].map((_, i) => i + 1),
       monster_type: [
         '強敵', 'ほこら', 'イベント', 'メガモン', 'その他'
       ],
       color_list: [
-        'red', 'yellow darken-1', 'blue', 'purple', 'light-green', 'blue-grey darken-1'
+        'red', 'yellow darken-1', 'blue', 'purple', 'light-green'
       ],
-      required: value => !!value || "必ず入力してください",
+      // 虹枠を考慮した方（HTMLの変更は不要）
+      // color_list: [
+      //   'red', 'yellow darken-1', 'blue', 'purple', 'light-green', 'rainbow'
+      // ],
+      required: value => !!value || "入力必須",
+      is_plus: value => value>=0 || "正の値を入力"
     }
   },
 

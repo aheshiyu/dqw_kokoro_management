@@ -1,56 +1,44 @@
 <template>
   <v-container>
     <v-col>
-      <v-row class="justify-end">
+      <v-row class="justify-end pb-3">
         <v-radio-group v-model="setting.user" row>
           <v-radio label="あへしゆ" value="2" @click="save_setting(); initialize()"></v-radio>
           <v-radio label="みきゃん" value="3" @click="save_setting(); initialize()"></v-radio>
         </v-radio-group>
       </v-row>
-      
+
       <v-col
-        v-if="filter_strong.length==0 && filter_megamon.length==0 && filter_event.length==0 && filter_other.length==0 && !loading"
+        v-if="filter_strong.length==0 && filter_megamon.length==0 && filter_hokora.length==0 && filter_event.length==0 && filter_other.length==0 && !loading"
         class="mt-5"
       >
         <p class="text-center">表示するモンスターがいません。</p>
       </v-col>
 
-      <p
+      <div
         v-if="!loading && filter_strong.length!=0"
-        class="text-caption mb-0 mt-8 pl-3 grey lighten-3 rounded-xl"
+        class="pb-5"
       >
-        強敵
-      </p>
-      <draggable
-        v-model="monsters"
-        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
-        @end="drag_update"
-        class="mb-8"
-      >
+        <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
+          強敵
+        </p>
         <v-col
-          v-for="(monster, key) in monsters"
+          v-for="(monster, key) in filter_strong"
           :key="key"
-          class="pa-0"
         >
-          <v-card
-            v-if="monster.type == '強敵'"
-            elevation="0"
-            class="pa-3 pb-0"
-          >
+          <v-card elevation="0">
             <v-row align="center" justify="space-between">
-              <v-col cols=auto class="handle">
-                <v-icon>mdi-drag-horizontal</v-icon>
-              </v-col>
-              <v-col cols=7>
+              <v-col cols=7 class="pb-0">
                 <v-row>
                   <v-col cols=auto>
-                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <v-icon v-if="monster.color=='rainbow'" x-small color="orange">mdi-looks</v-icon>
+                    <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                     <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
                   </v-col>
                 </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
-              <v-col cols=auto>
+              <v-col cols=auto class="pb-0">
                 <v-row>
                   <v-col cols=auto class="pr-0">
                     <v-btn icon @click="edit_monster(monster)">
@@ -67,44 +55,32 @@
             </v-row>
           </v-card>
         </v-col>
-      </draggable>
+      </div>
 
-      <p
+      <div
         v-if="!loading && filter_hokora.length!=0"
-        class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl"
+        class="pb-5"
       >
-        ほこら
-      </p>
-      <draggable
-        v-model="monsters"
-        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
-        @end="drag_update"
-        class="mb-8"
-      >
+        <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
+          ほこら
+        </p>
         <v-col
-          v-for="(monster, key) in monsters"
+          v-for="(monster, key) in filter_hokora"
           :key="key"
-          class="pa-0"
         >
-          <v-card
-            v-if="monster.type == 'ほこら'"
-            elevation="0"
-            class="pa-3 pb-0"
-          >
+          <v-card elevation="0">
             <v-row align="center" justify="space-between">
-              <v-col cols=auto class="handle">
-                <v-icon>mdi-drag-horizontal</v-icon>
-              </v-col>
-              <v-col cols=7>
+              <v-col cols=7 class="pb-0">
                 <v-row>
                   <v-col cols=auto>
-                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <v-icon v-if="monster.color=='rainbow'" x-small color="orange">mdi-looks</v-icon>
+                    <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                     <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
                   </v-col>
                 </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
-              <v-col cols=auto>
+              <v-col cols=auto class="pb-0">
                 <v-row>
                   <v-col cols=auto class="pr-0">
                     <v-btn icon @click="edit_monster(monster)">
@@ -121,44 +97,32 @@
             </v-row>
           </v-card>
         </v-col>
-      </draggable>
+      </div>
 
-      <p
+      <div
         v-if="!loading && filter_event.length!=0"
-        class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl"
+        class="pb-5"
       >
-        イベント
-      </p>
-      <draggable
-        v-model="monsters"
-        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
-        @end="drag_update"
-        class="mb-8"
-      >
+        <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
+          イベント
+        </p>
         <v-col
-          v-for="(monster, key) in monsters"
+          v-for="(monster, key) in filter_event"
           :key="key"
-          class="pa-0"
         >
-          <v-card
-            v-if="monster.type == 'イベント'"
-            elevation="0"
-            class="pa-3 pb-0"
-          >
+          <v-card elevation="0">
             <v-row align="center" justify="space-between">
-              <v-col cols=auto class="handle">
-                <v-icon>mdi-drag-horizontal</v-icon>
-              </v-col>
-              <v-col cols=7>
+              <v-col cols=7 class="pb-0">
                 <v-row>
                   <v-col cols=auto>
-                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <v-icon v-if="monster.color=='rainbow'" x-small color="orange">mdi-looks</v-icon>
+                    <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                     <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
                   </v-col>
                 </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
-              <v-col cols=auto>
+              <v-col cols=auto class="pb-0">
                 <v-row>
                   <v-col cols=auto class="pr-0">
                     <v-btn icon @click="edit_monster(monster)">
@@ -175,44 +139,32 @@
             </v-row>
           </v-card>
         </v-col>
-      </draggable>
+      </div>
 
-      <p
+      <div
         v-if="!loading && filter_megamon.length!=0"
-        class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl"
+        class="pb-5"
       >
-        メガモン
-      </p>
-      <draggable
-        v-model="monsters"
-        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
-        @end="drag_update"
-        class="mb-8"
-      >
+        <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
+          メガモン
+        </p>
         <v-col
-          v-for="(monster, key) in monsters"
+          v-for="(monster, key) in filter_megamon"
           :key="key"
-          class="pa-0"
         >
-          <v-card
-            v-if="monster.type == 'メガモン'"
-            elevation="0"
-            class="pa-3 pb-0"
-          >
+          <v-card elevation="0">
             <v-row align="center" justify="space-between">
-              <v-col cols=auto class="handle">
-                <v-icon>mdi-drag-horizontal</v-icon>
-              </v-col>
-              <v-col cols=7>
+              <v-col cols=7 class="pb-0">
                 <v-row>
                   <v-col cols=auto>
-                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <v-icon v-if="monster.color=='rainbow'" x-small color="orange">mdi-looks</v-icon>
+                    <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                     <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
                   </v-col>
                 </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
-              <v-col cols=auto>
+              <v-col cols=auto class="pb-0">
                 <v-row>
                   <v-col cols=auto class="pr-0">
                     <v-btn icon @click="edit_monster(monster)">
@@ -229,44 +181,32 @@
             </v-row>
           </v-card>
         </v-col>
-      </draggable>
+      </div>
 
-      <p
+      <div
         v-if="!loading && filter_other.length!=0"
-        class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl"
+        class="pb-5"
       >
-        その他
-      </p>
-      <draggable
-        v-model="monsters"
-        v-bind="{animation: 150, delay: 0, handle: '.handle'}"
-        @end="drag_update"
-        class="mb-8"
-      >
+        <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
+          その他
+        </p>
         <v-col
-          v-for="(monster, key) in monsters"
+          v-for="(monster, key) in filter_other"
           :key="key"
-          class="pa-0"
         >
-          <v-card
-            v-if="monster.type == 'その他'"
-            elevation="0"
-            class="pa-3 pb-0"
-          >
+          <v-card elevation="0">
             <v-row align="center" justify="space-between">
-              <v-col cols=auto class="handle">
-                <v-icon>mdi-drag-horizontal</v-icon>
-              </v-col>
-              <v-col cols=7>
+              <v-col cols=7 class="pb-0">
                 <v-row>
                   <v-col cols=auto>
-                    <v-icon x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
+                    <v-icon v-if="monster.color=='rainbow'" x-small color="orange">mdi-looks</v-icon>
+                    <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                     <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
                   </v-col>
                 </v-row>
                 <p class="mb-0">{{ monster.name }}</p>
               </v-col>
-              <v-col cols=auto>
+              <v-col cols=auto class="pb-0">
                 <v-row>
                   <v-col cols=auto class="pr-0">
                     <v-btn icon @click="edit_monster(monster)">
@@ -283,7 +223,7 @@
             </v-row>
           </v-card>
         </v-col>
-      </draggable>
+      </div>
       <v-btn
         color="light-blue"
         dark
@@ -340,13 +280,11 @@
 import AdditionalKokoroEdit from '@/components/AdditionalKokoroEdit.vue'
 import Confirm from '@/components/Confirm.vue'
 import { VueLoading } from 'vue-loading-template'
-import draggable from 'vuedraggable'
 
 export default {
   name: 'Additional',
 
   components: {
-    draggable,
     AdditionalKokoroEdit,
     Confirm,
     VueLoading,
@@ -368,24 +306,19 @@ export default {
 
   computed: {
     filter_strong: function() {
-      // console.log(this.monsters.filter(e => e.type == '強敵'))
-      return this.monsters.filter(e => e.type == '強敵')
+      return this.monsters.filter(e => e.type == '強敵').sort((a, b) => a.cost - b.cost)
     },
     filter_megamon: function() {
-      // console.log(this.monsters.filter(e => e.type == 'メガモン'))
-      return this.monsters.filter(e => e.type == 'メガモン')
+      return this.monsters.filter(e => e.type == 'メガモン').sort((a, b) => a.cost - b.cost)
     },
     filter_hokora: function() {
-      // console.log(this.monsters.filter(e => e.type == 'ほこら'))
-      return this.monsters.filter(e => e.type == 'ほこら')
+      return this.monsters.filter(e => e.type == 'ほこら').sort((a, b) => a.cost - b.cost)
     },
     filter_event: function() {
-      // console.log(this.monsters.filter(e => e.type == 'イベント'))
-      return this.monsters.filter(e => e.type == 'イベント')
+      return this.monsters.filter(e => e.type == 'イベント').sort((a, b) => a.cost - b.cost)
     },
     filter_other: function() {
-      // console.log(this.monsters.filter(e => e.type == 'その他'))
-      return this.monsters.filter(e => e.type == 'その他')
+      return this.monsters.filter(e => e.type == 'その他').sort((a, b) => a.cost - b.cost)
     }
   },
 
@@ -408,15 +341,15 @@ export default {
       const new_monster = {
         id: '',
         name: '',
-        cost: 1,
-        color: 'blue-grey darken-1',
-        type: 'その他',
+        cost: '',
+        color: '',
+        type: '',
         num_s: 0,
         num_a: 0,
         num_b: 0,
         max_s: 4,
-        max_a: 3,
-        max_b: 2
+        max_a: 4,
+        max_b: 3
       }
       this.$refs.edit.open(new_monster)
     },
@@ -447,9 +380,6 @@ export default {
         this.snackbar_settings.message = 'データを削除しました。'
         this.snackbar_settings.snackbar = true
       }
-    },
-    drag_update() {
-      this.$gas.update_list_additional(this.setting.user, this.monsters)
     },
 
     create_uuid() {
