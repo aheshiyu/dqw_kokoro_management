@@ -185,7 +185,7 @@
 
       <div
         v-if="!loading && filter_other.length!=0"
-        class="pb-5"
+        class="pb-16 mb-16"
       >
         <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
           その他
