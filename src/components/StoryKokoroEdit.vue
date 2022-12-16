@@ -11,7 +11,7 @@
           max-height="100"
           max-width="100"
           class="mx-auto"
-          :src="monster.image_path"
+          :src="require('@/assets/' + monster.name + '.png')"
         ></v-img>
       </div>
 
@@ -39,7 +39,7 @@
             src="@/assets/stamp_s.png"
           ></v-img>
           <v-slider
-            v-model="num_s"
+            v-model="monster.num_s"
             color="primary" track-color="grey"
             ticks="always" tick-size="7"
             thumb-label="always" :thumb-size="24"
@@ -55,7 +55,7 @@
             src="@/assets/stamp_a.png"
           ></v-img>
           <v-slider
-            v-model="num_a"
+            v-model="monster.num_a"
             color="primary" track-color="grey"
             ticks="always" tick-size="7"
             thumb-label="always" :thumb-size="24"
@@ -71,7 +71,7 @@
             src="@/assets/stamp_b.png"
           ></v-img>
           <v-slider
-            v-model="num_b"
+            v-model="monster.num_b"
             color="primary" track-color="grey"
             ticks="always" tick-size="7"
             thumb-label="always" :thumb-size="24"
@@ -117,19 +117,12 @@ export default {
     return {
       show_dialog: false,
       monster: {
-        image_path: "",
-        name: "",
+        name: "no_img",
         monster_level: "",
         is_rain: false,
         is_night: false,
       },
-      user: 0,
-      num_s: 0,
-      num_a: 0,
-      num_b: 0,
-      initial_num_s: 0,
-      initial_num_a: 0,
-      initial_num_b: 0,
+      initial_monster: null,
     }
   },
 
@@ -146,36 +139,15 @@ export default {
       }
     },
 
-    open(monster, user) {
+    open(monster) {
       this.show_dialog = true
-      this.$emit('child_snackbar', false)
+      this.$emit('snackbar', false)
       this.monster = monster
-      this.user = user
-      switch (user) {
-        case 2:
-          this.num_s = monster.s_aheshiyu
-          this.num_a = monster.a_aheshiyu
-          this.num_b = monster.b_aheshiyu
-          break
-        case 3:
-          this.num_s = monster.s_mikyan
-          this.num_a = monster.a_mikyan
-          this.num_b = monster.b_mikyan
-          break          
-      }
-      this.initial_num_s = this.num_s
-      this.initial_num_a = this.num_a
-      this.initial_num_b = this.num_b
+      this.initial_monster = JSON.parse(JSON.stringify(this.monster)) // Deepコピー
     },
 
     is_change() {
-      let result = false
-      if ((this.num_s != this.initial_num_s) || 
-          (this.num_a != this.initial_num_a) || 
-          (this.num_b != this.initial_num_b)) {
-        result = true
-      }
-      return result
+      return JSON.stringify(this.initial_monster) !== JSON.stringify(this.monster)
     },
 
     async close() {
@@ -188,24 +160,10 @@ export default {
       }
     },
 
-    async register() {
-      this.$emit('child_snackbar', true)
+    register() {
+      this.$emit('snackbar', true)
       if (this.is_change()) {
-        switch (this.user) {
-          case 2:
-            this.monster.s_aheshiyu = this.num_s
-            this.monster.a_aheshiyu = this.num_a
-            this.monster.b_aheshiyu = this.num_b
-            break
-          case 3:
-            this.monster.s_mikyan = this.num_s
-            this.monster.a_mikyan = this.num_a
-            this.monster.b_mikyan = this.num_b
-            break
-          default:
-            break
-        }
-        await this.$gas.update_story(''+this.user, this.monster)  // ユーザIDは文字列に変更（GAS内の処理のため）
+        this.$emit('update', this.monster)
       }
       this.show_dialog = false
     },

@@ -28,35 +28,113 @@
         </template>
 
         <template v-slot:item.rare1="props">
-          <Row :monster_list="props.item.rare1" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.rare1" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:item.rare2="props">
-          <Row :monster_list="props.item.rare2" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.rare2" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:item.rare3="props">
-          <Row :monster_list="props.item.rare3" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.rare3" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:item.rare4="props">
-          <Row :monster_list="props.item.rare4" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.rare4" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:item.rare5="props">
-          <Row :monster_list="props.item.rare5" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.rare5" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:item.rare6="props">
-          <Row :monster_list="props.item.rare6" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.rare6" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
         <template v-slot:item.region="props">
-          <Row :monster_list="props.item.region" :user="setting.user" @parent_snackbar="set_snackbar" class="pa-0"></Row>
+          <v-row>
+            <v-col v-for="(id, key) in props.item.region" :key="key" class="pa-0" cols=auto>
+              <div
+                @click="open_detail(id)"
+              >
+                <monster-icon
+                  :monster="get_monster(id)"
+                  :user="setting.user"
+                ></monster-icon>
+              </div>
+            </v-col>
+          </v-row>
         </template>
 
       </v-data-table>
     </v-col>
+    <story-kokoro-edit ref="kokoroDetail" @snackbar="set_snackbar" @update="update"></story-kokoro-edit>
     <v-snackbar
       v-model="snackbar"
       color="success"
@@ -85,13 +163,15 @@
 </template>
 
 <script>
-import Row from "@/components/Row.vue"
+import StoryKokoroEdit from "@/components/StoryKokoroEdit.vue"
+import MonsterIcon from "@/components/MonsterIcon.vue"
 
 export default {
   name: 'Home',
 
   components: {
-    Row
+    StoryKokoroEdit,
+    MonsterIcon
   },
 
   data() {
@@ -125,7 +205,55 @@ export default {
     },
     set_snackbar(flag) {
       this.snackbar = flag
-    }
+    },
+    get_monster(id) {
+      return this.monsters.find(e => e.monster_id == id)
+    },
+    // 未使用関数（参照元を変更してすべての画像を変更する作戦は遅くなる．なお不明）
+    set_monster(monster) {
+      const index = this.monsters.findIndex(e => e.monster_id == monster.monster_id)
+      this.$set(this.monsters, index, JSON.parse(JSON.stringify(monster)))
+    },
+    open_detail(monster_id) {
+      let monster = this.get_monster(monster_id)
+      switch (this.setting.user) {
+        case "1":
+          break
+        case "2":
+          monster.num_s = monster.s_aheshiyu
+          monster.num_a = monster.a_aheshiyu
+          monster.num_b = monster.b_aheshiyu
+          this.$refs.kokoroDetail.open(monster)
+          break
+        case "3":
+          monster.num_s = monster.s_mikyan
+          monster.num_a = monster.a_mikyan
+          monster.num_b = monster.b_mikyan
+          this.$refs.kokoroDetail.open(monster)
+          break
+        default:
+          break
+      }
+    },
+    async update(monster) {
+      switch (this.setting.user) {
+        case "1":
+          break
+        case "2":
+          monster.s_aheshiyu = monster.num_s
+          monster.a_aheshiyu = monster.num_a
+          monster.b_aheshiyu = monster.num_b
+          break
+        case "3":
+          monster.s_mikyan = monster.num_s
+          monster.a_mikyan = monster.num_a
+          monster.b_mikyan = monster.num_b
+          break
+        default:
+          break
+      }
+      await this.$gas.update_story(this.setting.user, monster)  // ユーザIDは文字列の状態で送信（GAS内の処理のため）
+    },
   },
 
   async mounted() {
@@ -137,30 +265,9 @@ export default {
 
     const raw_story = res.story
     const raw_monster = res.monster
-    const num2monster = (n) => {
-        if (n == '') return
-        let monster = raw_monster.find(m => n == m.monster_id)
-        try {
-          monster.image_path = require("@/assets/" + monster.name + ".png")
-        } catch(e) {
-          monster.image_path = require("@/assets/no_img.png")
-        }
-        // monster.image_path = "/img/" + monster.name + ".png"
-        return monster
-    }
-    raw_story.map(e => {
-      e.rare1 = e.rare1.split(',').map(n => num2monster(n))
-      e.rare2 = e.rare2.split(',').map(n => num2monster(n))
-      e.rare3 = e.rare3.split(',').map(n => num2monster(n))
-      e.rare4 = e.rare4.split(',').map(n => num2monster(n))
-      e.rare5 = e.rare5.split(',').map(n => num2monster(n))
-      e.rare6 = e.rare6.split(',').map(n => num2monster(n))
-      e.region = e.region.split(',').map(n => num2monster(n))
-    })
     this.datas = raw_story.reverse()
     this.monsters = raw_monster
 
-    // console.log(this.datas)
     console.log("data loaded!")
 
     this.loading = false
@@ -170,7 +277,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="sass">
 .fixed-column-table th:nth-child(1)
