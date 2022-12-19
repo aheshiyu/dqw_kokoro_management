@@ -1,5 +1,8 @@
 const setting = JSON.parse(localStorage.getItem('dqw_monster_view_setting'))
-const api_url = setting.api_url
+let api_url = ''
+if (setting) {
+  api_url = setting.api_url
+}
 
 const fetch_value = async (data) => {
   if (api_url == '') return

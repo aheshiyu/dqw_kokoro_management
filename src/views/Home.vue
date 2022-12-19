@@ -283,20 +283,20 @@ export default {
     this.users = constants.users
 
     const res = await this.$gas.get_story()
-
-    const raw_story = res.story
-    const raw_monster = res.monster
-    this.datas = raw_story.reverse()
-    this.monsters = raw_monster
-    this.monsters.map(monster => {
-      try {
-        monster.image_path = require('@/assets/' + monster.name + '.png')
-      } catch (e) {
-        monster.image_path = require('@/assets/no_img.png')
-      }      
-    })
-
-    console.log("data loaded!")
+    if (res) {
+      const raw_story = res.story
+      const raw_monster = res.monster
+      this.datas = raw_story.reverse()
+      this.monsters = raw_monster
+      this.monsters.map(monster => {
+        try {
+          monster.image_path = require('@/assets/' + monster.name + '.png')
+        } catch (e) {
+          monster.image_path = require('@/assets/no_img.png')
+        }      
+      })
+      console.log("data loaded!")
+    }
 
     this.loading = false
   },
