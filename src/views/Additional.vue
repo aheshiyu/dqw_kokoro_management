@@ -3,8 +3,13 @@
     <v-col>
       <v-row class="justify-end pb-3">
         <v-radio-group v-model="setting.user" row>
-          <v-radio label="あへしゆ" value="2" @click="save_setting(); initialize()"></v-radio>
-          <v-radio label="みきゃん" value="3" @click="save_setting(); initialize()"></v-radio>
+          <v-radio
+            v-for="user in users"
+            :key="user.id"
+            :label="user.name"
+            :value="user.id"
+            @click="save_setting(); initialize()"
+          ></v-radio>
         </v-radio-group>
       </v-row>
 
@@ -240,8 +245,8 @@
           mdi-plus
         </v-icon>
       </v-btn>
-      <AdditionalKokoroEdit ref="edit" @save_monster="save_monster"></AdditionalKokoroEdit>
-      <Confirm ref="confirm"></Confirm>
+      <additional-kokoro-edit ref="edit" @save_monster="save_monster"></additional-kokoro-edit>
+      <confirm ref="confirm"></confirm>
       <vue-loading
         v-if="loading"
         type="bubbles"
@@ -277,6 +282,7 @@
 </template>
 
 <script>
+import constants from '@/constants.js'
 import AdditionalKokoroEdit from '@/components/AdditionalKokoroEdit.vue'
 import Confirm from '@/components/Confirm.vue'
 import { VueLoading } from 'vue-loading-template'
@@ -294,8 +300,10 @@ export default {
     return {
       loading: false,
       monsters: [],
+      users: [],
       setting: {
-        user: 2,
+        user: null,
+        default_user: null,
       },
       snackbar_settings: {
         snackbar: false,
@@ -393,8 +401,13 @@ export default {
       this.loading = true
 
       this.monsters = []
-      const res = await this.$gas.get_additional(this.setting.user)
-      this.monsters = res.monsters
+      if (this.setting.user != 2 && this.setting.user != 3) {
+        this.setting.user = this.setting.default_user   // 「すべて」ページから「Additional」ページに来た時など
+      }
+      if (this.setting.user) {
+        const res = await this.$gas.get_additional(this.setting.user)
+        this.monsters = res.monsters
+      }
 
       this.loading = false
 
@@ -403,6 +416,7 @@ export default {
   },
   mounted() {
     this.setting = { ...this.$store.state.setting }
+    this.users = constants.users
     this.initialize()
   },
   beforeCreate() {

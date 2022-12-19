@@ -7,10 +7,19 @@
       <h3>アプリ設定</h3>
       <v-text-field
         label="API URL"
-        v-model="api_url"
+        v-model="setting.api_url"
         color="light-blue darken-1"
-        :rules="[required]"
+        :rules="[required_input]"
       ></v-text-field>
+      <v-select
+        v-model="setting.default_user"
+        :items="users"
+        item-text="name"
+        item-value="id"
+        label="デフォルトユーザ"
+        :rules="[required_select]"
+      >
+      </v-select>
       <v-row justify="end" class="pt-4">
         <v-col cols=auto>
           <v-btn
@@ -25,14 +34,18 @@
     </v-form>
     <p class="mb-0 mt-3">【API URLの場所】</p>
     <ol>
-      <li>対象のスプレッドシートを開く</li>
-      <li>上のリボンより「拡張機能」を選択</li>
-      <li>Apps Scriptを選択</li>
-      <li>別タブにスクリプトが起動するので右上の「デプロイ」を選択</li>
-      <li>「デプロイを管理」を選択</li>
-      <li>「ウェブアプリ」の項目にあるURLがAPI URL</li>
+      <li>対象のスプレッドシートを開きます。</li>
+      <li>上のリボンより「拡張機能」を選択します。</li>
+      <li>「Apps Script」を選択します。</li>
+      <li>別タブにスクリプトが起動しますので、右上の「デプロイ」を選択します。</li>
+      <li>「デプロイを管理」を選択します。</li>
+      <li>「ウェブアプリ」の項目にあるURLがAPI URLになります。</li>
     </ol>
-    <p>※API URL設定後はページ更新が必要</p>
+    <p>※API URL保存後はページ更新が必要です。</p>
+    <p class="mb-0 mt-3">【デフォルトユーザについて】</p>
+    <ul>
+      <li>基本的に編集するユーザを設定してください。</li>
+    </ul>
     <v-snackbar
       v-model="is_save"
       color="success"
@@ -61,27 +74,43 @@
 </template>
 
 <script>
+import constants from '@/constants.js'
+
 export default {
   name: 'Setting',
 
   data() {
     return {
+      setting: {
+        api_url: '',
+        user: null,
+        default_user: null,
+      },
       valid: false,
-      api_url: '',
+      users: [],
       is_save: false,
-      required: value => !!value || "必ず入力してください",
+      required_input: value => !!value || "必ず入力してください。",
+      required_select: value => !!value || "必ず選択してください。",
     }
   },
 
   methods: {
     save() {
       this.is_save = true
-      localStorage.setItem('dqw_monster_view_api_url', this.api_url)
+      this.$store.dispatch({
+        type: 'save_setting',
+        setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
+      })
     }
   },
 
   mounted() {
-    this.api_url = localStorage.getItem('dqw_monster_view_api_url')
+    this.setting = { ...this.$store.state.setting }
+    this.users = constants.users
+  },
+
+  beforeCreate() {
+    this.$store.dispatch('load_setting')
   }
 }
 </script>

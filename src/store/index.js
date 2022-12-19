@@ -5,17 +5,19 @@ Vue.use(Vuex)
 
 const state = {
   setting: {
+    api_url: null,
     user: null,
+    default_user: null,
   }
 }
 
 const mutations = {
   save_setting (state, { setting }) {
     state.setting = { ...setting }
-    localStorage.setItem('setting', JSON.stringify(setting))
+    localStorage.setItem('dqw_monster_view_setting', JSON.stringify(setting))
   },
   load_setting (state) {
-    const setting = JSON.parse(localStorage.getItem('setting'))
+    const setting = JSON.parse(localStorage.getItem('dqw_monster_view_setting'))
     if (setting) {
       state.setting = Object.assign(state.setting, setting)
     }

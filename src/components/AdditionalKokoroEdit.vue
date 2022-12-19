@@ -172,11 +172,12 @@
         </v-card-actions>        
       </v-form>
     </v-card>
-    <Confirm ref="confirm"></Confirm>
+    <confirm ref="confirm"></confirm>
   </v-dialog>
 </template>
 
 <script>
+import constants from '@/constants.js'
 import Confirm from '@/components/Confirm.vue'
 
 export default {
@@ -206,7 +207,6 @@ export default {
         max_b: 1
       },
       initial_monster: null,
-      user: null,
       monster_type: [
         '強敵', 'ほこら', 'イベント', 'メガモン', 'その他'
       ],
@@ -223,9 +223,8 @@ export default {
   },
 
   methods: {
-    open(monster, user) {
+    open(monster) {
       this.show_edit = true
-      this.user = user
       if (monster.id == '') {
         this.title = "こころデータ追加"
         this.button_label = "追加"
@@ -241,10 +240,21 @@ export default {
       }
     },
 
-    save() {
-      if (this.$refs.form.validate()) {
-        this.$emit('save_monster', this.monster)
-        this.show_edit = false
+    async save() {
+      const save_process = () => {
+        if (this.$refs.form.validate()) {
+          this.$emit('save_monster', this.monster)
+          this.show_edit = false
+        }
+      }
+      const setting = { ...this.$store.state.setting }
+      if (setting.user != setting.default_user) {
+        const user = constants.users.find(u => u.id == setting.user)
+        if (await this.$refs.confirm.confirm(`本当に${this.button_label}しますか？`, `${user.name}のこころを${this.button_label}します。`)) {
+          save_process()
+        }
+      } else {
+        save_process()
       }
     },
     async close() {

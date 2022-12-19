@@ -5,7 +5,7 @@
     <v-img
       max-height="35"
       max-width="35"
-      :src="require('@/assets/' + monster.name + '.png')"
+      :src="monster.image_path"
       :class="{ 'condition_night': monster.is_night, 'condition_rain': monster.is_rain }"
     ></v-img>
   </div>

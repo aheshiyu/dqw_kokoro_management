@@ -3,9 +3,18 @@
     <v-col>
       <v-row class="justify-end">
         <v-radio-group v-model="setting.user" row>
-          <v-radio label="すべて" value="1" @click="save_setting"></v-radio>
-          <v-radio label="あへしゆ" value="2" @click="save_setting"></v-radio>
-          <v-radio label="みきゃん" value="3" @click="save_setting"></v-radio>
+          <v-radio
+            label="すべて"
+            value="1"
+            @click="save_setting"
+          ></v-radio>
+          <v-radio
+            v-for="user in users"
+            :key="user.id"
+            :label="user.name"
+            :value="user.id"
+            @click="save_setting"
+          ></v-radio>
         </v-radio-group>
       </v-row>
       <v-data-table
@@ -134,7 +143,11 @@
 
       </v-data-table>
     </v-col>
-    <story-kokoro-edit ref="kokoroDetail" @snackbar="set_snackbar" @update="update"></story-kokoro-edit>
+    <story-kokoro-edit
+      ref="kokoroDetail"
+      @snackbar="set_snackbar"
+      @update="update"
+    ></story-kokoro-edit>
     <v-snackbar
       v-model="snackbar"
       color="success"
@@ -163,6 +176,7 @@
 </template>
 
 <script>
+import constants from '@/constants.js'
 import StoryKokoroEdit from "@/components/StoryKokoroEdit.vue"
 import MonsterIcon from "@/components/MonsterIcon.vue"
 
@@ -190,8 +204,10 @@ export default {
       ],
       datas: [],
       monsters: [],
+      users: [],
       setting: {
-        user: 1,
+        user: null,
+        default_user: null,
       },
     }
   },
@@ -209,7 +225,7 @@ export default {
     get_monster(id) {
       return this.monsters.find(e => e.monster_id == id)
     },
-    // 未使用関数（参照元を変更してすべての画像を変更する作戦は遅くなる．なお不明）
+    // 未使用関数（参照元を変更してすべての画像を変更する作戦は遅くなる．再描画するからか？shallowコピーで同時変更が結局早め）
     set_monster(monster) {
       const index = this.monsters.findIndex(e => e.monster_id == monster.monster_id)
       this.$set(this.monsters, index, JSON.parse(JSON.stringify(monster)))
@@ -260,13 +276,25 @@ export default {
     this.loading = true
 
     this.setting = { ...this.$store.state.setting }
+    if (!this.setting.user) {
+      this.setting.user = '1'
+    }
     
+    this.users = constants.users
+
     const res = await this.$gas.get_story()
 
     const raw_story = res.story
     const raw_monster = res.monster
     this.datas = raw_story.reverse()
     this.monsters = raw_monster
+    this.monsters.map(monster => {
+      try {
+        monster.image_path = require('@/assets/' + monster.name + '.png')
+      } catch (e) {
+        monster.image_path = require('@/assets/no_img.png')
+      }      
+    })
 
     console.log("data loaded!")
 

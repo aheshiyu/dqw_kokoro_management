@@ -1,10 +1,11 @@
-const apiUrl = localStorage.getItem('dqw_monster_view_api_url')
+const setting = JSON.parse(localStorage.getItem('dqw_monster_view_setting'))
+const api_url = setting.api_url
 
 const fetch_value = async (data) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   console.log(data)
   let res = null
-  await fetch(apiUrl, {
+  await fetch(api_url, {
     "method": "POST",
     "Content-Type": "application/x-www-form-urlencoded",
     "body": JSON.stringify(data)
@@ -22,9 +23,9 @@ const fetch_value = async (data) => {
 }
 // 値を返さない処理の場合はこちら
 const fetch_no_value = (data) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   console.log(data)
-  fetch(apiUrl, {
+  fetch(api_url, {
     "method": "POST",
     "mode": "no-cors",
     "Content-Type": "application/x-www-form-urlencoded",
@@ -35,7 +36,7 @@ const fetch_no_value = (data) => {
 // ---------------------------------------- //
 
 const get_story = () => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   const data = {
     method: "get_story",
     params: {
@@ -45,7 +46,7 @@ const get_story = () => {
   return fetch_value(data)
 }
 const update_story = (user, monster) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   const data = {
     method: "update_story",
     params: {
@@ -59,7 +60,7 @@ const update_story = (user, monster) => {
 // ---------------------------------------- //
 
 const get_additional = (user) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   const data = {
     method: "get_additional",
     params: {
@@ -69,7 +70,7 @@ const get_additional = (user) => {
   return fetch_value(data)
 }
 const delete_additional = (user, monster) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   const data = {
     method: "delete_additional",
     params: {
@@ -80,7 +81,7 @@ const delete_additional = (user, monster) => {
   return fetch_no_value(data)
 }
 const update_additional = (user, monster) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   const data = {
     method: "update_additional",
     params: {
@@ -91,7 +92,7 @@ const update_additional = (user, monster) => {
   return fetch_no_value(data)
 }
 const update_list_additional = (user, monsters) => {
-  if (apiUrl == '') return
+  if (api_url == '') return
   const data = {
     method: "update_list_additional",
     params: {

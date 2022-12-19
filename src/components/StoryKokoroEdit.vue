@@ -11,7 +11,7 @@
           max-height="100"
           max-width="100"
           class="mx-auto"
-          :src="require('@/assets/' + monster.name + '.png')"
+          :src="monster.image_path"
         ></v-img>
       </div>
 
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import constants from '@/constants.js'
 import Confirm from '@/components/Confirm.vue'
 
 export default {
@@ -160,12 +161,23 @@ export default {
       }
     },
 
-    register() {
-      this.$emit('snackbar', true)
-      if (this.is_change()) {
-        this.$emit('update', this.monster)
+    async register() {
+      const register_process = () => {
+        this.$emit('snackbar', true)
+        if (this.is_change()) {
+          this.$emit('update', this.monster)
+        }
+        this.show_dialog = false
       }
-      this.show_dialog = false
+      const setting = { ...this.$store.state.setting }
+      if (setting.user != setting.default_user) {
+        const user = constants.users.find(u => u.id == setting.user)
+        if (await this.$refs.confirm.confirm('本当に更新しますか？', `${user.name}のこころを更新します。`)) {
+          register_process()
+        }
+      } else {
+        register_process()
+      }
     },
   }
 }
