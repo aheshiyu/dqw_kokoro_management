@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="pa-0 pb-5"
+    class="pa-0 pb-7"
   >
     <p class="text-caption mb-0 pl-3 grey lighten-3 rounded-xl">
       {{ section_title }}
