@@ -154,6 +154,14 @@
           </v-row>
         </v-card-text>
 
+        <v-card-text>
+          <v-row justify="end">
+            <v-col cols=auto class="py-0 px-10">
+              <span class="grey--text">進捗率: {{ Math.ceil((get_current_value(monster) / get_max_value(monster)) * 100) }}% ({{ get_current_value(monster) }} / {{ get_max_value(monster) }})</span>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
         <v-card-actions class="justify-end pt-4">
           <v-btn
             color="light-blue darken-3"

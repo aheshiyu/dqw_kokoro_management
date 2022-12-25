@@ -4,9 +4,11 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import gasApi from './api' // 追加
+import utility from './utility'
 
 Vue.config.productionTip = false
 Vue.prototype.$gas = gasApi // 追加
+Vue.mixin(utility)
 
 new Vue({
   router,
