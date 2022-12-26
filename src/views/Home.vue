@@ -27,12 +27,21 @@
         mobile-breakpoint="100"
         :loading="loading"
         loading-text="読込中..."
+        no-data-text="データがありません。"
         class="elevation-1 fixed-column-table"
       >
 
         <template v-slot:item.story="props">
-          <td class="pl-0 pr-0 font-weight-medium">
-            {{ props.item.story }}
+          <td class="px-1 font-weight-medium text-center">
+            <!-- ストーリー話数 -->
+            <span>
+              {{ props.item.story.split(' ')[0] }}
+            </span>
+            <br/>
+            <!-- 推奨レベル -->
+            <span class="text-caption grey--text">
+              {{ props.item.story.split(' ')[1] }}
+            </span>
           </td>
         </template>
 
