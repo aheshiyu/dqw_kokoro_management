@@ -8,6 +8,7 @@ const state = {
     api_url: null,
     user: null,
     default_user: null,
+    prefecture: null,
   }
 }
 

@@ -24,12 +24,29 @@
         height="75vh"
         fixed-header
         hide-default-footer
+        hide-default-header
         mobile-breakpoint="100"
         :loading="loading"
         loading-text="読込中..."
         no-data-text="データがありません。"
         class="elevation-1 fixed-column-table"
       >
+
+        <template v-slot:header="{ props }">
+          <th
+            v-for="(head, key) in props.headers"
+            :key="key"
+            class="text-caption text-left font-weight-bold pa-1"
+            :class="{ header_left: head.value=='story', header_other: head.value!='story' }"
+            :style="'min-width: ' + head.width + 'px'"
+          >
+            <span>{{ head.text.split(' ')[0] }}</span>
+            <!-- 都道府県名を表示する場合 -->
+            <div v-if="head.text.split(' ').length == 2">
+              <span class="grey--text">{{ head.text.split(' ')[1] }}</span>
+            </div>
+          </th>
+        </template>
 
         <template v-slot:item.story="props">
           <td class="px-1 font-weight-medium text-center">
@@ -137,7 +154,7 @@
 
         <template v-slot:item.region="props">
           <v-row>
-            <v-col v-for="(id, key) in props.item.region" :key="key" class="pa-0" cols=auto>
+            <v-col v-for="(id, key) in props.item.region[setting.prefecture - 1]" :key="key" class="pa-0" cols=auto>
               <div
                 @click="open_detail(id)"
               >
@@ -207,7 +224,6 @@ export default {
         { text: "あまり", value: "rare4", sortable: false, width: 90, class: 'pl-1' },
         { text: "メタル", value: "rare6", sortable: false, width: 90, class: 'pl-1' },
         { text: "ときどき", value: "rare3", sortable: false, width: 130, class: 'pl-1' },
-        { text: "ご当地", value: "region", sortable: false, width: 90, class: 'pa-1' },
         { text: "よく", value: "rare2", sortable: false, width: 160, class: 'pl-1' },
         { text: "とてもよく", value: "rare1", sortable: false, width: 340, class: 'pl-1' },
       ],
@@ -217,6 +233,7 @@ export default {
       setting: {
         user: null,
         default_user: null,
+        prefecture: null,
       },
     }
   },
@@ -290,6 +307,13 @@ export default {
     }
     
     this.users = constants.users
+    this.headers.splice(5, 0, { // 2番目の変数: 置き換える要素の数．今回は追加のためゼロ
+      text: 'ご当地 (' + constants.prefectures[this.setting.prefecture - 1].name + ')',
+      value: 'region',
+      sortable: false,
+      width: 90,
+      class: 'pa-1'
+    })
 
     const res = await this.$gas.get_story()
     if (res) {
@@ -335,4 +359,26 @@ export default {
   max-width: 200px
   overflow: hidden
   text-overflow: ellipsis
+</style>
+
+<style>
+/* ヘッダの一番左の枠 */
+.header_left {
+  position: sticky !important;
+  top: 0;   /* 表の上からどれだけズラすか（指定なしの場合上下方向に固定されない） */
+  left: 0;  /* 表の左からどれだけズラすか（指定なしの場合左右方向に固定されない） */
+  z-index: 4 !important;  /* 変更するときは注意（ローディングバーが隠れる恐れ） */
+  background: white;
+  border-right: 1px grey solid;
+  border-bottom: 1px grey solid;
+}
+/* それ以外のヘッダ */
+.header_other {
+  position: sticky !important;
+  top: 0;
+  z-index: 3 !important;
+  background: white;
+  vertical-align: middle;
+  border-bottom: 1px grey solid;
+}
 </style>

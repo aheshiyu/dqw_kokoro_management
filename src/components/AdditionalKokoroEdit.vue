@@ -31,6 +31,7 @@
               <v-select
                 v-model="monster.color"
                 :items="color_list"
+                menu-props="auto"
                 label="色*"
                 :rules="[required]"
               >
@@ -48,6 +49,7 @@
               <v-select
                 v-model="monster.type"
                 :items="monster_type"
+                menu-props="auto"
                 label="種類*"
                 :rules="[required]"
               ></v-select>

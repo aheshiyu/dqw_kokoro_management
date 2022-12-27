@@ -16,10 +16,21 @@
         :items="users"
         item-text="name"
         item-value="id"
+        menu-props="auto"
         label="デフォルトユーザ"
+        no-data-text="データがありません。"
         :rules="[required_select]"
-      >
-      </v-select>
+      ></v-select>
+      <v-select
+        v-model="setting.prefecture"
+        :items="prefectures"
+        item-text="name"
+        item-value="id"
+        menu-props="auto"
+        label="ご当地モンスター表示地域"
+        no-data-text="データがありません。"
+        :rules="[required_select]"
+      ></v-select>
       <v-row justify="end" class="pt-4">
         <v-col cols=auto>
           <v-btn
@@ -44,7 +55,11 @@
     <p>※API URL保存後はページ更新が必要です。</p>
     <p class="mb-0 mt-3">【デフォルトユーザについて】</p>
     <ul>
-      <li>基本的に編集するユーザを設定してください。</li>
+      <li>基本的に編集するユーザを選択してください。</li>
+    </ul>
+    <p class="mb-0 mt-3">【ご当地モンスター表示地域について】</p>
+    <ul>
+      <li>一覧に表示させたいご当地モンスターの地域を選択してください。</li>
     </ul>
     <v-snackbar
       v-model="is_save"
@@ -88,6 +103,7 @@ export default {
       },
       valid: false,
       users: [],
+      prefectures: [],
       is_save: false,
       required_input: value => !!value || "必ず入力してください。",
       required_select: value => !!value || "必ず選択してください。",
@@ -107,6 +123,7 @@ export default {
   mounted() {
     this.setting = { ...this.$store.state.setting }
     this.users = constants.users
+    this.prefectures = constants.prefectures
   },
 
   beforeCreate() {
