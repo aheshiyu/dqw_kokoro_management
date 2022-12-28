@@ -40,16 +40,34 @@
             :class="{ header_left: head.value=='story', header_other: head.value!='story' }"
             :style="'min-width: ' + head.width + 'px'"
           >
-            <span>{{ head.text.split(' ')[0] }}</span>
-            <!-- 都道府県名を表示する場合 -->
-            <div v-if="head.text.split(' ').length == 2">
-              <span class="grey--text">{{ head.text.split(' ')[1] }}</span>
+            <!-- 並び替えボタン -->
+            <div v-if="key == 0">
+              <v-row justify="center">
+                <v-col cols=auto class="pt-4 pb-3">
+                  <v-btn
+                    icon
+                    @click="sort_datas(); save_setting()"
+                  >
+                    <v-icon :class="{ arrow_down: setting.sort_asc }">
+                      mdi-arrow-up
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </div>
+            <!-- 通常のヘッダ -->
+            <div v-else>
+              <span>{{ head.text.split(' ')[0] }}</span>
+              <!-- 都道府県名を表示する場合 -->
+              <div v-if="head.text.split(' ').length == 2">
+                <span class="grey--text">{{ head.text.split(' ')[1] }}</span>
+              </div>
             </div>
           </th>
         </template>
 
         <template v-slot:item.story="props">
-          <td class="px-1 font-weight-medium text-center">
+          <td class="px-1 font-weight-bold text-center">
             <!-- ストーリー話数 -->
             <span>
               {{ props.item.story.split(' ')[0] }}
@@ -234,6 +252,7 @@ export default {
         user: null,
         default_user: null,
         prefecture: null,
+        sort_asc: false,
       },
     }
   },
@@ -244,6 +263,10 @@ export default {
         type: 'save_setting',
         setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
       })
+    },
+    sort_datas() {
+      this.setting.sort_asc = !this.setting.sort_asc
+      this.datas = this.datas.reverse()
     },
     set_snackbar(flag) {
       this.snackbar = flag
@@ -320,7 +343,12 @@ export default {
     if (res) {
       const raw_story = res.story
       const raw_monster = res.monster
-      this.datas = raw_story.reverse()
+
+      this.datas = raw_story
+      if (!this.setting.sort_asc) {
+        this.datas = this.datas.reverse()
+      }
+
       this.monsters = raw_monster
       this.monsters.map(monster => {
         try {
@@ -381,5 +409,10 @@ export default {
   background: white;
   vertical-align: middle;
   border-bottom: 1px grey solid;
+}
+/* これをオン・オフする */
+.arrow_down {
+  transform: rotate(180deg);
+  transition-delay: 3s;
 }
 </style>

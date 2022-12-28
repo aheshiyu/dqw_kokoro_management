@@ -9,6 +9,7 @@ const state = {
     user: null,
     default_user: null,
     prefecture: null,
+    sort_asc: false,
   }
 }
 
