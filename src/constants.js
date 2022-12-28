@@ -7,6 +7,10 @@ export default {
     { id: '3', name: 'みきゃん' },
   ],
 
+  /**
+   * 都道府県名リスト
+   * ※keyは未使用
+   */
   prefectures: [
     { id: 1, key: 'hokkaido', name: '北海道' },
     { id: 2, key: 'aomori', name: '青森県' },

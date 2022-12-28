@@ -2,12 +2,13 @@
   <div
     :class="{ 'is_hidden': (user == 2 && monster.s_aheshiyu >= 4) || (user == 3 && monster.s_mikyan >= 4) }"
   >
-    <v-img
-      max-height="35"
-      max-width="35"
+    <img
       :src="monster.image_path"
+      :alt="monster.name"
       :class="{ 'condition_night': monster.is_night, 'condition_rain': monster.is_rain }"
-    ></v-img>
+      width="35"
+      style="vertical-align: middle"
+    />
   </div>
 </template>
 

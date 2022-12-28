@@ -21,12 +21,13 @@
         no-data-text="データがありません。"
         :rules="[required_select]"
       ></v-select>
+      <!-- menu-propsに関する参考リンク: https://github.com/vuetifyjs/vuetify/issues/11144 -->
       <v-select
         v-model="setting.prefecture"
         :items="prefectures"
         item-text="name"
         item-value="id"
-        menu-props="auto"
+        :menu-props="{ auto: true, contentClass: 'my_select' }" 
         label="ご当地モンスター表示地域"
         no-data-text="データがありません。"
         :rules="[required_select]"
@@ -102,8 +103,8 @@ export default {
         default_user: null,
       },
       valid: false,
-      users: [],
-      prefectures: [],
+      users: constants.users,
+      prefectures: constants.prefectures,
       is_save: false,
       required_input: value => !!value || "必ず入力してください。",
       required_select: value => !!value || "必ず選択してください。",
@@ -122,8 +123,6 @@ export default {
 
   mounted() {
     this.setting = { ...this.$store.state.setting }
-    this.users = constants.users
-    this.prefectures = constants.prefectures
   },
 
   beforeCreate() {
@@ -131,3 +130,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.my_select {
+  max-height: 350px !important;
+}
+</style>

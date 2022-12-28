@@ -229,7 +229,7 @@ export default {
       ],
       datas: [],
       monsters: [],
-      users: [],
+      users: constants.users,
       setting: {
         user: null,
         default_user: null,
@@ -306,14 +306,15 @@ export default {
       this.setting.user = '1'
     }
     
-    this.users = constants.users
-    this.headers.splice(5, 0, { // 2番目の変数: 置き換える要素の数．今回は追加のためゼロ
-      text: 'ご当地 (' + constants.prefectures[this.setting.prefecture - 1].name + ')',
-      value: 'region',
-      sortable: false,
-      width: 90,
-      class: 'pa-1'
-    })
+    if (this.setting.prefecture >= 1 && this.setting.prefecture <= 47) {
+      this.headers.splice(5, 0, { // 2番目の変数: 置き換える要素の数．今回は追加のためゼロ
+        text: 'ご当地 (' + constants.prefectures[this.setting.prefecture - 1].name + ')',
+        value: 'region',
+        sortable: false,
+        width: 90,
+        class: 'pa-1'
+      })
+    }
 
     const res = await this.$gas.get_story()
     if (res) {

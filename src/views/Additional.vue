@@ -136,7 +136,7 @@ export default {
     return {
       loading: false,
       monsters: [],
-      users: [],
+      users: constants.users,
       setting: {
         user: null,
         default_user: null,
@@ -252,7 +252,6 @@ export default {
   },
   mounted() {
     this.setting = { ...this.$store.state.setting }
-    this.users = constants.users
     this.initialize()
   },
   beforeCreate() {
