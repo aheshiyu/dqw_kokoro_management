@@ -38,9 +38,9 @@
       <v-card-text
         class="pb-1 pt-4 px-10 text-center"
       >
-        <span class="font-weight-bold">進捗率: {{ Math.ceil((get_current_value(monster_progress, true) / get_max_value(monster_progress, true)) * 100) }}% ({{ get_current_value(monster_progress, true) }} / {{ get_max_value(monster_progress, true) }})</span>
+        <span class="font-weight-bold">進捗率: {{ progress_rate }}% ({{ progress_number }} / {{ progress_max }})</span>
         <v-progress-linear
-          :value="(get_current_value(monster_progress, true) / get_max_value(monster_progress, true)) * 100"
+          :value="(progress_number / progress_max) * 100"
           color="blue darken-2"
           background-color="grey lighten-3"
           height="10"
@@ -63,7 +63,7 @@
             thumb-label="always" :thumb-size="24"
             min="0" max="4"
             class="pt-3 px-6"
-            @change="change_slider"
+            @change="update_progress"
           >
           </v-slider>
         </v-row>
@@ -80,7 +80,7 @@
             thumb-label="always" :thumb-size="24"
             min="0" max="3"
             class="pt-3 px-6"
-            @change="change_slider"
+            @change="update_progress"
           >
           </v-slider>
         </v-row>
@@ -97,7 +97,7 @@
             thumb-label="always" :thumb-size="24"
             min="0" max="2"
             class="pt-3 px-6"
-            @change="change_slider"
+            @change="update_progress"
           >
           </v-slider>
         </v-row>
@@ -144,12 +144,9 @@ export default {
         is_rain: false,
         is_night: false,
       },
-      // 進捗率用のモンスターデータ（通常のモンスターはリアクティブではないため動的に進捗率が変化しないため）
-      monster_progress: {
-        num_s: 0,
-        num_a: 0,
-        num_b: 0,
-      },
+      progress_rate: 0,
+      progress_number: 0,
+      progress_max: 0,
       initial_monster: null,
     }
   },
@@ -171,14 +168,14 @@ export default {
       this.show_dialog = true
       this.$emit('snackbar', false)
       this.monster = monster
-      this.monster_progress = JSON.parse(JSON.stringify(monster))
       this.initial_monster = JSON.parse(JSON.stringify(this.monster)) // Deepコピー
+      this.update_progress()
     },
 
-    change_slider() {
-      this.monster_progress.num_s = this.monster.num_s
-      this.monster_progress.num_a = this.monster.num_a
-      this.monster_progress.num_b = this.monster.num_b
+    update_progress() {
+      this.progress_number = this.get_current_value(this.monster, true)
+      this.progress_max = this.get_max_value(this.monster, true)
+      this.progress_rate = Math.ceil((this.progress_number / this.progress_max) * 100)
     },
 
     is_change() {
