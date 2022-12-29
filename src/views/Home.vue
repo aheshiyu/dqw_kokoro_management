@@ -200,7 +200,7 @@
       :value="loading"
     >
       <img
-        src="/img/loading.png"
+        src="@/assets/loading.png"
         width="150"
         height="150"
       />

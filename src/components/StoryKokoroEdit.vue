@@ -38,7 +38,7 @@
       <v-card-text class="pt-5 pb-0">
         <v-row class="mt-2 pl-3">
           <img
-            src="/img/stamp_s.png"
+            src="@/assets/stamp_s.png"
             width="50"
             height="50"
           />
@@ -54,7 +54,7 @@
         </v-row>
         <v-row class="pl-3">
           <img
-            src="/img/stamp_a.png"
+            src="@/assets/stamp_a.png"
             width="50"
             height="50"
           />
@@ -70,7 +70,7 @@
         </v-row>
         <v-row class="pl-3">
           <img
-            src="/img/stamp_b.png"
+            src="@/assets/stamp_b.png"
             width="50"
             height="50"
           />
