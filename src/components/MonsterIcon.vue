@@ -7,6 +7,7 @@
       :alt="monster.name"
       :class="{ 'condition_night': monster.is_night, 'condition_rain': monster.is_rain }"
       width="35"
+      height="35"
       style="vertical-align: middle"
     />
   </div>

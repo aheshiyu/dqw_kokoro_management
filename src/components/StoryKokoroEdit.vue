@@ -6,14 +6,18 @@
   >
     <v-card>
 
-      <div class="pt-5">
-        <v-img
-          max-height="100"
-          max-width="100"
-          class="mx-auto"
-          :src="monster.image_path"
-        ></v-img>
-      </div>
+      <v-card-text class="py-0">
+        <v-row justify="center" class="pt-5">
+          <v-col cols=auto>
+            <img
+              :src="monster.image_path"
+              width="100"
+              height="100"
+              style="vertical-align: middle"
+            />
+          </v-col>
+        </v-row>
+      </v-card-text>
 
       <v-card-title class="font-weight-black justify-center">
         {{ monster.name }}
@@ -33,11 +37,11 @@
 
       <v-card-text class="pt-5 pb-0">
         <v-row class="mt-2 pl-3">
-          <v-img
-            max-height="50"
-            max-width="50"
-            src="@/assets/stamp_s.png"
-          ></v-img>
+          <img
+            src="/img/stamp_s.png"
+            width="50"
+            height="50"
+          />
           <v-slider
             v-model="monster.num_s"
             color="primary" track-color="grey"
@@ -49,11 +53,11 @@
           </v-slider>
         </v-row>
         <v-row class="pl-3">
-          <v-img
-            max-height="50"
-            max-width="50"
-            src="@/assets/stamp_a.png"
-          ></v-img>
+          <img
+            src="/img/stamp_a.png"
+            width="50"
+            height="50"
+          />
           <v-slider
             v-model="monster.num_a"
             color="primary" track-color="grey"
@@ -65,11 +69,11 @@
           </v-slider>
         </v-row>
         <v-row class="pl-3">
-          <v-img
-            max-height="50"
-            max-width="50"
-            src="@/assets/stamp_b.png"
-          ></v-img>
+          <img
+            src="/img/stamp_b.png"
+            width="50"
+            height="50"
+          />
           <v-slider
             v-model="monster.num_b"
             color="primary" track-color="grey"

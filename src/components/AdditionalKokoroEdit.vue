@@ -59,11 +59,11 @@
 
         <v-card-text class="pt-1 pb-0">
           <v-row class="mt-2 pl-3">
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/stamp_s.png"
-            ></v-img>
+            <img
+              src="/img/stamp_s.png"
+              width="50"
+              height="50"
+            />
             <v-slider
               v-model="monster.num_s"
               color="primary" track-color="grey"
@@ -91,11 +91,11 @@
             </v-slider>
           </v-row>
           <v-row class="pl-3">
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/stamp_a.png"
-            ></v-img>
+            <img
+              src="/img/stamp_a.png"
+              width="50"
+              height="50"
+            />
             <v-slider
               v-model="monster.num_a"
               color="primary" track-color="grey"
@@ -123,11 +123,11 @@
             </v-slider>
           </v-row>
           <v-row class="pl-3">
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/stamp_b.png"
-            ></v-img>
+            <img
+              src="/img/stamp_b.png"
+              width="50"
+              height="50"
+            />
             <v-slider
               v-model="monster.num_b"
               color="primary" track-color="grey"

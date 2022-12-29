@@ -2,18 +2,20 @@
   <v-container>
     <v-col>
       <v-row class="justify-end">
-        <v-radio-group v-model="setting.user" row>
+        <v-radio-group
+          row
+          v-model="selected_user"
+          @change="set_select"
+        >
           <v-radio
             label="すべて"
             value="1"
-            @click="save_setting"
           ></v-radio>
           <v-radio
             v-for="user in users"
             :key="user.id"
             :label="user.name"
             :value="user.id"
-            @click="save_setting"
           ></v-radio>
         </v-radio-group>
       </v-row>
@@ -26,7 +28,6 @@
         hide-default-footer
         hide-default-header
         mobile-breakpoint="100"
-        :loading="loading"
         loading-text="読込中..."
         no-data-text="データがありません。"
         class="elevation-1 fixed-column-table"
@@ -192,6 +193,30 @@
       @snackbar="set_snackbar"
       @update="update"
     ></story-kokoro-edit>
+    <v-overlay
+      z-index=4
+      color="white"
+      opacity="0.7"
+      :value="loading"
+    >
+      <img
+        src="/img/loading.png"
+        width="150"
+        height="150"
+      />
+      <!-- <span class="text-h4 font-weight-black grey--text">Loading...</span> -->
+      <!-- <vue-loading
+        type="spin"
+        color="#03A9F4"
+        :size="{ width: '100px', height: '100px' }"
+      ></vue-loading> -->
+      <!-- <v-progress-circular
+        indeterminate
+        size="100"
+        color="primary"
+        width="10"
+      ></v-progress-circular> -->
+    </v-overlay>
     <v-snackbar
       v-model="snackbar"
       color="success"
@@ -223,13 +248,15 @@
 import constants from '@/constants.js'
 import StoryKokoroEdit from "@/components/StoryKokoroEdit.vue"
 import MonsterIcon from "@/components/MonsterIcon.vue"
+// import { VueLoading } from 'vue-loading-template'
 
 export default {
   name: 'Home',
 
   components: {
     StoryKokoroEdit,
-    MonsterIcon
+    MonsterIcon,
+    // VueLoading
   },
 
   data() {
@@ -248,6 +275,7 @@ export default {
       datas: [],
       monsters: [],
       users: constants.users,
+      selected_user: null,
       setting: {
         user: null,
         default_user: null,
@@ -264,9 +292,21 @@ export default {
         setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
       })
     },
-    sort_datas() {
-      this.setting.sort_asc = !this.setting.sort_asc
-      this.datas = this.datas.reverse()
+    set_select(event) {
+      this.loading = true
+      setTimeout(() => {
+        this.setting.user = event
+        this.save_setting()
+        this.loading = false
+      }, 25);
+    },
+    async sort_datas() {
+      this.loading = true
+      setTimeout(() => {
+        this.setting.sort_asc = !this.setting.sort_asc
+        this.datas = this.datas.reverse()
+        this.loading = false
+      }, 25);   // 25ミリ秒後に実行する（this.loading = trueを先に実行させるため）
     },
     set_snackbar(flag) {
       this.snackbar = flag
@@ -328,6 +368,7 @@ export default {
     if (!this.setting.user) {
       this.setting.user = '1'
     }
+    this.selected_user = this.setting.user
     
     if (this.setting.prefecture >= 1 && this.setting.prefecture <= 47) {
       this.headers.splice(5, 0, { // 2番目の変数: 置き換える要素の数．今回は追加のためゼロ
