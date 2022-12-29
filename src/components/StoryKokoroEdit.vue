@@ -35,6 +35,20 @@
 
       <v-divider class="mx-4"></v-divider>
 
+      <v-card-text
+        class="pb-1 pt-4 px-10 text-center"
+      >
+        <span class="font-weight-bold">進捗率: {{ Math.ceil((get_current_value(monster_progress, true) / get_max_value(monster_progress, true)) * 100) }}% ({{ get_current_value(monster_progress, true) }} / {{ get_max_value(monster_progress, true) }})</span>
+        <v-progress-linear
+          :value="(get_current_value(monster_progress, true) / get_max_value(monster_progress, true)) * 100"
+          color="blue darken-2"
+          background-color="grey lighten-3"
+          height="10"
+          striped
+          class="px-3"
+        ></v-progress-linear>
+      </v-card-text>
+
       <v-card-text class="pt-5 pb-0">
         <v-row class="mt-2 pl-3">
           <img
@@ -49,6 +63,7 @@
             thumb-label="always" :thumb-size="24"
             min="0" max="4"
             class="pt-3 px-6"
+            @change="change_slider"
           >
           </v-slider>
         </v-row>
@@ -65,6 +80,7 @@
             thumb-label="always" :thumb-size="24"
             min="0" max="3"
             class="pt-3 px-6"
+            @change="change_slider"
           >
           </v-slider>
         </v-row>
@@ -81,6 +97,7 @@
             thumb-label="always" :thumb-size="24"
             min="0" max="2"
             class="pt-3 px-6"
+            @change="change_slider"
           >
           </v-slider>
         </v-row>
@@ -127,6 +144,12 @@ export default {
         is_rain: false,
         is_night: false,
       },
+      // 進捗率用のモンスターデータ（通常のモンスターはリアクティブではないため動的に進捗率が変化しないため）
+      monster_progress: {
+        num_s: 0,
+        num_a: 0,
+        num_b: 0,
+      },
       initial_monster: null,
     }
   },
@@ -148,7 +171,14 @@ export default {
       this.show_dialog = true
       this.$emit('snackbar', false)
       this.monster = monster
+      this.monster_progress = JSON.parse(JSON.stringify(monster))
       this.initial_monster = JSON.parse(JSON.stringify(this.monster)) // Deepコピー
+    },
+
+    change_slider() {
+      this.monster_progress.num_s = this.monster.num_s
+      this.monster_progress.num_a = this.monster.num_a
+      this.monster_progress.num_b = this.monster.num_b
     },
 
     is_change() {

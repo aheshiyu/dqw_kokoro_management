@@ -29,6 +29,7 @@
                 color="blue darken-2"
                 background-color="grey lighten-3"
                 height="5"
+                striped
               ></v-progress-linear>
             </div>
           </v-col>

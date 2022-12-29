@@ -193,11 +193,13 @@
       @snackbar="set_snackbar"
       @update="update"
     ></story-kokoro-edit>
+    <!-- v-showの方が画像が適切に表示される...？ -->
     <v-overlay
+      v-show="loading"
       z-index=4
       color="white"
       opacity="0.7"
-      :value="loading"
+      :value="true"
     >
       <img
         src="@/assets/loading.png"
@@ -314,7 +316,7 @@ export default {
     get_monster(id) {
       return this.monsters.find(e => e.monster_id == id)
     },
-    // 未使用関数（参照元を変更してすべての画像を変更する作戦は遅くなる．再描画するからか？shallowコピーで同時変更が結局早め）
+    // 未使用関数（$setが処理を重くしているため，結局shallowコピーで編集した方が速いという）
     set_monster(monster) {
       const index = this.monsters.findIndex(e => e.monster_id == monster.monster_id)
       this.$set(this.monsters, index, JSON.parse(JSON.stringify(monster)))
@@ -357,6 +359,7 @@ export default {
         default:
           break
       }
+      // this.set_monster(monster)
       await this.$gas.update_story(this.setting.user, monster)  // ユーザIDは文字列の状態で送信（GAS内の処理のため）
     },
   },

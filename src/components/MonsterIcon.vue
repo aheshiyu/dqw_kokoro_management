@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'is_hidden': (user == 2 && monster.s_aheshiyu >= 4) || (user == 3 && monster.s_mikyan >= 4) }"
+    :class="{ 'is_hidden': (user==2 && monster.s_aheshiyu>=4) || (user==3 && monster.s_mikyan>=4) }"
   >
     <img
       :src="monster.image_path"
