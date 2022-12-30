@@ -18,7 +18,7 @@
           v-if="filter_strong.length==0 && filter_megamon.length==0 && filter_hokora.length==0 && filter_event.length==0 && filter_other.length==0"
           class="mt-5"
         >
-          <p class="text-center">表示するモンスターがいません。</p>
+          <p class="text-center">表示できるモンスターがいません。</p>
         </v-col>
 
         <monster-section
