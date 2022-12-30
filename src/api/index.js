@@ -48,6 +48,16 @@ const get_story = () => {
   }
   return fetch_value(data)
 }
+const get_monster = () => {
+  if (api_url == '') return
+  const data = {
+    method: "get_monster",
+    params: {
+      // 空
+    }
+  }
+  return fetch_value(data)
+}
 const update_story = (user, monster) => {
   if (api_url == '') return
   const data = {
@@ -106,15 +116,31 @@ const update_list_additional = (user, monsters) => {
   return fetch_no_value(data)
 }
 
+// ---------------------------------------- //
+
+const get_region_monster = () => {
+  if (api_url == '') return
+  const data = {
+    method: "get_region_monster",
+    params: {
+      // 空
+    }
+  }
+  return fetch_value(data)
+}
+
 export default {
   fetch_value,
   fetch_no_value,
 
   get_story,
+  get_monster,
   update_story,
 
   get_additional,
   delete_additional,
   update_additional,
   update_list_additional,
+
+  get_region_monster,
 }

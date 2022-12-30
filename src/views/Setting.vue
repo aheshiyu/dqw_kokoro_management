@@ -31,7 +31,44 @@
         label="ご当地モンスター表示地域"
         no-data-text="データがありません。"
         :rules="[required_select]"
-      ></v-select>
+      >
+        <template v-slot:selection="{ item }">
+          <span>{{ item.name }}</span>
+          <v-row class="pl-8">
+            <v-col
+              cols=auto
+              v-for="(monster, key) in item.monsters"
+              :key=key
+              class="py-5 px-1"
+            >
+              <img
+                :src="require('@/assets/' + monster.name + '.png')"
+                width="35"
+                height="35"
+                style="vertical-align: middle"
+              />
+            </v-col>
+          </v-row>
+        </template>
+        <template v-slot:item="{ item }">
+          <span>{{ item.name }}</span>
+          <v-row justify="end" class="pr-5">
+            <v-col
+              cols=auto
+              v-for="(monster, key) in item.monsters"
+              :key=key
+              class="px-1"
+            >
+              <img
+                :src="require('@/assets/' + monster.name + '.png')"
+                width="35"
+                height="35"
+                style="vertical-align: middle"
+              />
+            </v-col>
+          </v-row>
+        </template>
+      </v-select>
       <v-row justify="end" class="pt-4">
         <v-col cols=auto>
           <v-btn
@@ -62,6 +99,19 @@
     <ul>
       <li>一覧に表示させたいご当地モンスターの地域を選択してください。</li>
     </ul>
+    <v-overlay
+      v-show="loading"
+      z-index=4
+      color="white"
+      opacity="0.7"
+      :value="true"
+    >
+      <img
+        src="@/assets/loading.png"
+        width="150"
+        height="150"
+      />
+    </v-overlay>    
     <v-snackbar
       v-model="is_save"
       color="success"
@@ -102,6 +152,7 @@ export default {
         user: null,
         default_user: null,
       },
+      loading: false,
       valid: false,
       users: constants.users,
       prefectures: constants.prefectures,
@@ -121,8 +172,21 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
+    this.loading = true
+
     this.setting = { ...this.$store.state.setting }
+
+    const res = await this.$gas.get_region_monster()
+    if (res) {
+      let index = 0
+      this.prefectures.map(e => {
+        e.monsters = res[index]
+        index++
+      })
+    }
+
+    this.loading = false
   },
 
   beforeCreate() {

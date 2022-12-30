@@ -47,7 +47,7 @@
                 <v-col cols=auto class="pt-4 pb-3">
                   <v-btn
                     icon
-                    @click="sort_datas(); save_setting()"
+                    @click="reverse_datas"
                   >
                     <v-icon :class="{ arrow_down: setting.sort_asc }">
                       mdi-arrow-up
@@ -193,7 +193,7 @@
       @snackbar="set_snackbar"
       @update="update"
     ></story-kokoro-edit>
-    <!-- v-showの方が画像が適切に表示される...？ -->
+    <!-- v-overlayが内部的にv-ifを利用しているため画像が出ないときがある．v-showの方が表示オン・オフだからOKっぽい -->
     <v-overlay
       v-show="loading"
       z-index=4
@@ -206,7 +206,7 @@
         width="150"
         height="150"
       />
-      <!-- <span class="text-h4 font-weight-black grey--text">Loading...</span> -->
+      <!-- 動きのあるローディング画面は処理の重さで動作がイマイチになる・・ -->
       <!-- <vue-loading
         type="spin"
         color="#03A9F4"
@@ -288,12 +288,14 @@ export default {
   },
 
   methods: {
+    // localStorageに保存
     save_setting() {
       this.$store.dispatch({
         type: 'save_setting',
         setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
       })
     },
+    // ユーザ選択処理（ローディングを挟むための処理）
     set_select(event) {
       this.loading = true
       setTimeout(() => {
@@ -302,25 +304,32 @@ export default {
         this.loading = false
       }, 25);
     },
-    async sort_datas() {
+    // データ反転処理（ローディングを挟むために冗長になっている）
+    reverse_datas() {
       this.loading = true
       setTimeout(() => {
         this.setting.sort_asc = !this.setting.sort_asc
         this.datas = this.datas.reverse()
+        this.save_setting()
         this.loading = false
       }, 25);   // 25ミリ秒後に実行する（this.loading = trueを先に実行させるため）
     },
+    // スナックバー設定
     set_snackbar(flag) {
       this.snackbar = flag
     },
+    // モンスターID検索処理
     get_monster(id) {
       return this.monsters.find(e => e.monster_id == id)
     },
+
     // 未使用関数（$setが処理を重くしているため，結局shallowコピーで編集した方が速いという）
     set_monster(monster) {
       const index = this.monsters.findIndex(e => e.monster_id == monster.monster_id)
       this.$set(this.monsters, index, JSON.parse(JSON.stringify(monster)))
     },
+
+    // こころの数編集ページを開くための関数
     open_detail(monster_id) {
       let monster = this.get_monster(monster_id)
       switch (this.setting.user) {
@@ -342,6 +351,8 @@ export default {
           break
       }
     },
+
+    // データ更新（色々なチェックは編集コンポーネントで）
     async update(monster) {
       switch (this.setting.user) {
         case "1":
@@ -359,7 +370,6 @@ export default {
         default:
           break
       }
-      // this.set_monster(monster)
       await this.$gas.update_story(this.setting.user, monster)  // ユーザIDは文字列の状態で送信（GAS内の処理のため）
     },
   },
@@ -371,29 +381,40 @@ export default {
     if (!this.setting.user) {
       this.setting.user = '1'
     }
+    // 選択したユーザIDを格納する処理をsetTimeout内で実行したいために分けている（set_select参照）
     this.selected_user = this.setting.user
-    
-    if (this.setting.prefecture >= 1 && this.setting.prefecture <= 47) {
-      this.headers.splice(5, 0, { // 2番目の変数: 置き換える要素の数．今回は追加のためゼロ
-        text: 'ご当地 (' + constants.prefectures[this.setting.prefecture - 1].name + ')',
-        value: 'region',
-        sortable: false,
-        width: 90,
-        class: 'pa-1'
-      })
-    }
 
-    const res = await this.$gas.get_story()
-    if (res) {
-      const raw_story = res.story
-      const raw_monster = res.monster
+    const res_story = await this.$gas.get_story()
+    const res_monster = await this.$gas.get_monster()
+    if (res_story && res_monster) {
 
-      this.datas = raw_story
+      // ストーリーデータの格納と並び替え適用有無
+      this.datas = res_story
       if (!this.setting.sort_asc) {
         this.datas = this.datas.reverse()
       }
 
-      this.monsters = raw_monster
+      // ご当地モンスター列の追加
+      if (this.setting.prefecture >= 1 && this.setting.prefecture <= 47) {
+        // ご当地モンスターが2列になるかどうか
+        let is2col = false
+        const index = this.setting.prefecture - 1   // 添え字を分けないとsome内で動作しなかった
+        this.datas.some(function(row) {
+          is2col = row.region[index].length >= 2
+          if (is2col) return true // break
+        })
+        // 列追加
+        this.headers.splice(5, 0, { // 2番目の変数: 置き換える要素の数．今回は追加のためゼロ
+          text: 'ご当地 (' + constants.prefectures[this.setting.prefecture - 1].name + ')',
+          value: 'region',
+          sortable: false,
+          width: is2col ? 90 : 60,  // モンスター数に応じたカラムサイズ
+          class: 'pa-1'
+        })
+      }
+
+      // 全てのモンスター情報
+      this.monsters = res_monster
       this.monsters.map(monster => {
         try {
           monster.image_path = require('@/assets/' + monster.name + '.png')

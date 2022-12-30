@@ -15,7 +15,7 @@
         </v-row>
 
         <v-col
-          v-if="filter_strong.length==0 && filter_megamon.length==0 && filter_hokora.length==0 && filter_event.length==0 && filter_other.length==0 && !loading"
+          v-if="filter_strong.length==0 && filter_megamon.length==0 && filter_hokora.length==0 && filter_event.length==0 && filter_other.length==0"
           class="mt-5"
         >
           <p class="text-center">表示するモンスターがいません。</p>
@@ -80,14 +80,27 @@
         </v-btn>
         <additional-kokoro-edit ref="edit" @save_monster="save_monster"></additional-kokoro-edit>
         <confirm ref="confirm"></confirm>
-        <vue-loading
+        <!-- <vue-loading
           v-if="loading"
           type="bubbles"
           color="#03A9F4"
           :size="{ width: '50px', height: '50px' }"
           class="mt-5"
-        ></vue-loading>
+        ></vue-loading> -->
       </v-col>
+      <v-overlay
+        v-show="loading"
+        z-index=4
+        color="white"
+        opacity="0.7"
+        :value="true"
+      >
+        <img
+          src="@/assets/loading.png"
+          width="150"
+          height="150"
+        />
+      </v-overlay>
       <v-snackbar
         v-model="snackbar_settings.snackbar"
         color="success"
@@ -120,7 +133,7 @@ import constants from '@/constants.js'
 import MonsterSection from '@/components/MonsterSection.vue'
 import AdditionalKokoroEdit from '@/components/AdditionalKokoroEdit.vue'
 import Confirm from '@/components/Confirm.vue'
-import { VueLoading } from 'vue-loading-template'
+// import { VueLoading } from 'vue-loading-template'
 
 export default {
   name: 'Additional',
@@ -129,7 +142,7 @@ export default {
     MonsterSection,
     AdditionalKokoroEdit,
     Confirm,
-    VueLoading,
+    // VueLoading,
   },
 
   data() {
@@ -242,7 +255,7 @@ export default {
       }
       if (this.setting.user) {
         const res = await this.$gas.get_additional(this.setting.user)
-        this.monsters = res.monsters
+        this.monsters = res
       }
 
       this.loading = false
