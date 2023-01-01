@@ -27,7 +27,7 @@
         :items="prefectures"
         item-text="name"
         item-value="id"
-        :menu-props="{ auto: true, contentClass: 'my_select' }" 
+        :menu-props="{ auto: true, contentClass: 'select_region' }" 
         label="ご当地モンスター表示地域"
         no-data-text="データがありません。"
         :rules="[required_select]"
@@ -196,7 +196,7 @@ export default {
 </script>
 
 <style>
-.my_select {
+.select_region {
   max-height: 350px !important;
 }
 </style>

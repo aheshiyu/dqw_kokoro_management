@@ -31,7 +31,7 @@
               <v-select
                 v-model="monster.color"
                 :items="color_list"
-                menu-props="auto"
+                :menu-props="{ auto: true, contentClass: 'select_color' }" 
                 label="色*"
                 :rules="[required]"
               >
@@ -49,7 +49,7 @@
               <v-select
                 v-model="monster.type"
                 :items="monster_type"
-                menu-props="auto"
+                :menu-props="{ auto: true, contentClass: 'select_type' }" 
                 label="種類*"
                 :rules="[required]"
               ></v-select>
@@ -282,3 +282,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.select_color {
+  max-height: 300px !important;
+}
+.select_type {
+  max-height: 300px !important;
+}
+</style>
