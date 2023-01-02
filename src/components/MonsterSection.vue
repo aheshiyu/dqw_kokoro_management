@@ -18,6 +18,12 @@
                 <v-icon v-if="monster.color=='rainbow'" x-small color="orange">mdi-looks</v-icon>
                 <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                 <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
+                <span
+                  v-if="monster.type == 'イベント' || monster.type == 'その他'"
+                  class="mb-0 text-caption pl-1"
+                >
+                  {{ monster.seen }}
+                </span>
               </v-col>
             </v-row>
             <!-- モンスター名 -->

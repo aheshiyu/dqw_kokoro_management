@@ -201,6 +201,7 @@ export default {
         cost: '',
         color: '',
         type: '',
+        seen: '',
         num_s: 0,
         num_a: 0,
         num_b: 0,
@@ -259,6 +260,7 @@ export default {
       }
 
       this.loading = false
+      console.log(this.monsters)
 
       console.log('data loaded!')
     },

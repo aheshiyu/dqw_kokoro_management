@@ -55,6 +55,14 @@
               ></v-select>
             </v-col>
           </v-row>
+          <v-select
+            v-if="monster.type == 'イベント' || monster.type == 'その他'"
+            v-model="monster.seen"
+            :items="monster_seen"
+            :menu-props="{ auto: true, contentClass: 'select_seen' }" 
+            label="見かけやすさ"
+            clearable
+          ></v-select>
         </v-card-text>
 
         <v-card-text class="pt-1 pb-0">
@@ -208,7 +216,8 @@ export default {
         name: '',
         cost: '',
         color: '',
-        type: null,
+        type: '',
+        seen: '',
         num_s: 0,
         num_a: 0,
         num_b: 0,
@@ -227,6 +236,13 @@ export default {
       // color_list: [
       //   'red', 'yellow darken-1', 'blue', 'purple', 'light-green', 'rainbow'
       // ],
+      monster_seen: [
+        'とてもよく見かける',
+        'よく見かける',
+        'ときどき見かける',
+        'あまり見かけない',
+        'めったに見かけない'
+      ],
       required: value => !!value || "入力必須",
       is_plus: value => value>=0 || "正の値を入力"
     }
@@ -288,6 +304,9 @@ export default {
   max-height: 300px !important;
 }
 .select_type {
+  max-height: 300px !important;
+}
+.select_seen {
   max-height: 300px !important;
 }
 </style>
