@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center" class="pa-3">
-      <v-col lg=5 xl=5>
+      <v-col lg=5 xl=5 class="pb-16 mb-16">
         <v-row class="justify-end pb-3">
           <v-radio-group v-model="setting.user" row>
             <v-radio
@@ -59,7 +59,6 @@
           :monsters="filter_other"
           @edit="edit_monster"
           @delete="delete_monster"
-          class="pb-16 mb-16"
         ></monster-section>
 
         <v-btn
@@ -260,7 +259,6 @@ export default {
       }
 
       this.loading = false
-      console.log(this.monsters)
 
       console.log('data loaded!')
     },

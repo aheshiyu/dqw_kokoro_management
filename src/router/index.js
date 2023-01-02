@@ -1,26 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Additional from '../views/Additional.vue'
-import Setting from '../views/Setting.vue'
 
 Vue.use(VueRouter)
+
+function loadView (view) {
+  return () => import(`@/views/${view}.vue`)
+}
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: loadView('Home'),
   },
   {
     path: '/additional',
     name: 'Additional',
-    component: Additional,
+    component: loadView('Additional'),
   },
   {
     path: '/setting',
     name: 'Setting',
-    component: Setting
+    component: loadView('Setting')
   }
 ]
 

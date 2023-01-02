@@ -269,6 +269,10 @@ export default {
     async save() {
       const save_process = () => {
         if (this.$refs.form.validate()) {
+          // 見かけやすさを設定しない種類の場合は既存の見かけやすさを削除する
+          if (!(this.monster.type == 'イベント' || this.monster.type == 'その他')) {
+            this.monster.seen = ''
+          }
           this.$emit('save_monster', this.monster)
           this.show_edit = false
         }
