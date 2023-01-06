@@ -194,7 +194,7 @@ export default {
 
     async register() {
       const register_process = () => {
-        this.$emit('snackbar', true)
+        this.$emit('snackbar', true, 'データを更新しました。')
         if (this.is_change()) {
           this.$emit('update', this.monster)
         }

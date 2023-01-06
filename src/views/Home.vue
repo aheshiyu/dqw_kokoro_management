@@ -50,7 +50,7 @@
                     @click="reverse_datas"
                   >
                     <v-icon :class="{ arrow_down: setting.sort_asc }">
-                      mdi-arrow-up
+                      mdi-arrow-down
                     </v-icon>
                   </v-btn>
                 </v-col>
@@ -67,123 +67,122 @@
           </th>
         </template>
 
-        <template v-slot:item.story="props">
-          <td class="px-1 font-weight-bold text-center">
-            <!-- ストーリー話数 -->
-            <span>
-              {{ props.item.story.split(' ')[0] }}
-            </span>
-            <br/>
-            <!-- 推奨レベル -->
-            <span class="text-caption grey--text">
-              {{ props.item.story.split(' ')[1] }}
-            </span>
-          </td>
-        </template>
-
-        <template v-slot:item.rare1="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.rare1" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.rare2="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.rare2" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.rare3="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.rare3" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.rare4="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.rare4" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.rare5="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.rare5" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.rare6="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.rare6" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.region="props">
-          <v-row>
-            <v-col v-for="(id, key) in props.item.region[setting.prefecture - 1]" :key="key" class="pa-0" cols=auto>
-              <div
-                @click="open_detail(id)"
-              >
-                <monster-icon
-                  :monster="get_monster(id)"
-                  :user="setting.user"
-                ></monster-icon>
-              </div>
-            </v-col>
-          </v-row>
+        <template v-slot:item="{ item }">
+          <tr
+            :class="{ 'selected_row': item.story.split(' ')[0] == setting.active_story }"
+          >
+            <td
+              class="px-1 font-weight-bold text-center"
+              :class="{ 'selected_row': item.story.split(' ')[0] == setting.active_story }"
+              @click="set_select_row(item.story.split(' ')[0])"
+            >
+              <span>
+                {{ item.story.split(' ')[0] }}
+              </span>
+              <br/>
+              <span class="text-caption grey--text">
+                {{ item.story.split(' ')[1] }}
+              </span>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.rare5" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.rare4" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.rare6" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.rare3" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.region[setting.prefecture - 1]" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.rare2" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+            <td>
+              <v-row>
+                <v-col v-for="(id, key) in item.rare1" :key="key" class="pa-0" cols=auto>
+                  <div
+                    @click="open_detail(id)"
+                  >
+                    <monster-icon
+                      :monster="get_monster(id)"
+                      :user="setting.user"
+                    ></monster-icon>
+                  </div>
+                </v-col>
+              </v-row>
+            </td>
+          </tr>
         </template>
 
       </v-data-table>
@@ -220,7 +219,7 @@
       ></v-progress-circular> -->
     </v-overlay>
     <v-snackbar
-      v-model="snackbar"
+      v-model="snackbar_setting.show"
       color="success"
       class="mb-8"
     >
@@ -229,7 +228,7 @@
           <v-icon small>mdi-check-circle</v-icon>
         </v-col>
         <v-col cols="auto">
-          <p class="mb-0">更新しました。</p>
+          <p class="mb-0">{{ snackbar_setting.message }}</p>
         </v-col>
       </v-row>
       <template v-slot:action="{ attrs }">
@@ -237,7 +236,7 @@
           icon 
           color="white"
           v-bind="attrs"
-          @click="snackbar = false"
+          @click="snackbar_setting.show = false"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -264,7 +263,10 @@ export default {
   data() {
     return {
       loading: false,
-      snackbar: false,
+      snackbar_setting: {
+        show: false,
+        message: '',
+      },
       headers: [
         { text: "", value: "story", sortable: false, width: 50 },
         { text: "めったに", value: "rare5", sortable: false, width: 60, class: 'pa-1' },
@@ -280,6 +282,7 @@ export default {
       selected_user: null,
       setting: {
         user: null,
+        active_story: null,
         default_user: null,
         prefecture: null,
         sort_asc: false,
@@ -294,6 +297,23 @@ export default {
         type: 'save_setting',
         setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
       })
+    },
+    // プレイ中のストーリー選択（ローディング処理有り）
+    set_select_row(story) {
+      this.loading = true
+      setTimeout(() => {
+        let message = ''
+        if (this.setting.active_story != story) {
+          this.setting.active_story = story
+          message = 'プレイ中を「' + story + '」に設定しました。'
+        } else {
+          this.setting.active_story = null
+          message = 'プレイ中のストーリーを解除しました。'
+        }
+        this.save_setting()
+        this.set_snackbar(true, message)
+        this.loading = false
+      }, 25);
     },
     // ユーザ選択処理（ローディングを挟むための処理）
     set_select(event) {
@@ -315,8 +335,9 @@ export default {
       }, 25);   // 25ミリ秒後に実行する（this.loading = trueを先に実行させるため）
     },
     // スナックバー設定
-    set_snackbar(flag) {
-      this.snackbar = flag
+    set_snackbar(flag, message='') {
+      this.snackbar_setting.show = flag
+      this.snackbar_setting.message = message
     },
     // モンスターID検索処理
     get_monster(id) {
@@ -479,5 +500,8 @@ export default {
 .arrow_down {
   transform: rotate(180deg);
   transition-delay: 3s;
+}
+.selected_row {
+  background-color: #E3F2FD !important;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center" class="pa-3">
-      <v-col lg=5 xl=5 class="pb-16 mb-16">
+      <v-col lg=4 xl=4 class="pb-16 mb-16">
         <v-row class="justify-end pb-3">
           <v-radio-group v-model="setting.user" row>
             <v-radio
@@ -103,6 +103,7 @@
       <v-snackbar
         v-model="snackbar_settings.snackbar"
         color="success"
+        class="mb-2"
       >
         <v-row align="center">
           <v-col cols="auto" class="pr-0">

@@ -7,6 +7,7 @@ const state = {
   setting: {
     api_url: null,
     user: null,
+    active_story: null,
     default_user: null,
     prefecture: null,
     sort_asc: false,
