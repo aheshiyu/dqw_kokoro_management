@@ -69,12 +69,12 @@
 
         <template v-slot:item="{ item }">
           <tr
-            :class="{ 'selected_row': item.story.split(' ')[0] == setting.active_story }"
+            :class="{ 'selected_row': (setting.user==2 && item.story_aheshiyu=='x') || (setting.user==3 && item.story_mikyan=='x') }"
           >
             <td
               class="px-1 font-weight-bold text-center"
-              :class="{ 'selected_row': item.story.split(' ')[0] == setting.active_story }"
-              @click="set_select_row(item.story.split(' ')[0])"
+              :class="{ 'selected_row': (setting.user==2 && item.story_aheshiyu=='x') || (setting.user==3 && item.story_mikyan=='x') }"
+              @click="set_select_story(item)"
             >
               <span>
                 {{ item.story.split(' ')[0] }}
@@ -242,6 +242,7 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <confirm ref="confirm"></confirm>
   </v-container>
 </template>
 
@@ -249,6 +250,7 @@
 import constants from '@/constants.js'
 import StoryKokoroEdit from "@/components/StoryKokoroEdit.vue"
 import MonsterIcon from "@/components/MonsterIcon.vue"
+import Confirm from '../components/Confirm.vue'
 // import { VueLoading } from 'vue-loading-template'
 
 export default {
@@ -257,6 +259,7 @@ export default {
   components: {
     StoryKokoroEdit,
     MonsterIcon,
+    Confirm,
     // VueLoading
   },
 
@@ -282,7 +285,6 @@ export default {
       selected_user: null,
       setting: {
         user: null,
-        active_story: null,
         default_user: null,
         prefecture: null,
         sort_asc: false,
@@ -298,22 +300,49 @@ export default {
         setting: JSON.parse(JSON.stringify(this.setting)) // shallowコピーを防ぐため（このプロジェクトでは意味がないが）
       })
     },
-    // プレイ中のストーリー選択（ローディング処理有り）
-    set_select_row(story) {
-      this.loading = true
-      setTimeout(() => {
-        let message = ''
-        if (this.setting.active_story != story) {
-          this.setting.active_story = story
-          message = 'プレイ中を「' + story + '」に設定しました。'
-        } else {
-          this.setting.active_story = null
-          message = 'プレイ中のストーリーを解除しました。'
+    // プレイ中のストーリー選択（ローディング処理あり）
+    async set_select_story(row) {
+      if (this.setting.user == 1) return
+
+      const update_process = () => {
+        this.loading = true
+        setTimeout(() => {
+          let cur_story = null
+          switch (this.setting.user) {
+            case "2":
+              cur_story = this.datas.find(e => e.story_aheshiyu == 'x')
+              cur_story.story_aheshiyu = ''
+              row.story_aheshiyu = 'x'
+              break
+            case "3":
+              cur_story = this.datas.find(e => e.story_mikyan == 'x')
+              cur_story.story_mikyan = ''
+              row.story_mikyan = 'x'
+              break
+            default:
+              break
+          }
+          const story = row.story.split(' ')[0]
+          this.$gas.update_active_story(this.setting.user, story)      
+          let message = ''
+          if (cur_story.story.split(' ')[0] != story) {
+            message = 'プレイ中を「' + story + '」に設定しました。'
+          } else {
+            message = 'プレイ中のストーリーを解除しました。'
+          }
+          this.loading = false
+          this.set_snackbar(true, message)
+        }, 25);
+      }
+
+      if (this.setting.user != this.setting.default_user) {
+        const user = constants.users.find(u => u.id == this.setting.user)
+        if (await this.$refs.confirm.confirm('本当に更新しますか？', `${user.name}のプレイ中ストーリーを更新します。`)) {
+          update_process()
         }
-        this.save_setting()
-        this.set_snackbar(true, message)
-        this.loading = false
-      }, 25);
+      } else {
+        update_process()
+      }
     },
     // ユーザ選択処理（ローディングを挟むための処理）
     set_select(event) {

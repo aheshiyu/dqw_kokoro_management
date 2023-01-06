@@ -69,6 +69,17 @@ const update_story = (user, monster) => {
   }
   return fetch_no_value(data)
 }
+const update_active_story = (user, story) => {
+  if (api_url == '') return
+  const data = {
+    method: "update_active_story",
+    params: {
+      user: user,
+      story: story,
+    }
+  }
+  return fetch_no_value(data)
+}
 
 // ---------------------------------------- //
 
@@ -136,6 +147,7 @@ export default {
   get_story,
   get_monster,
   update_story,
+  update_active_story,
 
   get_additional,
   delete_additional,
