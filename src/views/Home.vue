@@ -307,29 +307,33 @@ export default {
       const update_process = () => {
         this.loading = true
         setTimeout(() => {
-          let cur_story = null
+          let key = ''
           switch (this.setting.user) {
             case "2":
-              cur_story = this.datas.find(e => e.story_aheshiyu == 'x')
-              cur_story.story_aheshiyu = ''
-              row.story_aheshiyu = 'x'
+              key = 'story_aheshiyu'
               break
             case "3":
-              cur_story = this.datas.find(e => e.story_mikyan == 'x')
-              cur_story.story_mikyan = ''
-              row.story_mikyan = 'x'
+              key = 'story_mikyan'
               break
             default:
               break
           }
           const story = row.story.split(' ')[0]
-          this.$gas.update_active_story(this.setting.user, story)      
+          const cur_story = this.datas.find(e => e[key] == 'x')
           let message = ''
-          if (cur_story.story.split(' ')[0] != story) {
+          if (!cur_story) {
+            row[key] = 'x'
             message = 'プレイ中を「' + story + '」に設定しました。'
           } else {
-            message = 'プレイ中のストーリーを解除しました。'
+            cur_story[key] = ''
+            if (cur_story.story.split(' ')[0] != story) {
+              message = 'プレイ中を「' + story + '」に設定しました。'
+              row[key] = 'x'
+            } else {
+              message = 'プレイ中のストーリーを解除しました。'
+            }
           }
+          this.$gas.update_active_story(this.setting.user, story)      
           this.loading = false
           this.set_snackbar(true, message)
         }, 25);
