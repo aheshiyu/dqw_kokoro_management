@@ -9,7 +9,7 @@
         >
           <v-radio
             label="すべて"
-            value="1"
+            value="all"
           ></v-radio>
           <v-radio
             v-for="user in users"
@@ -20,6 +20,8 @@
         </v-radio-group>
       </v-row>
       <v-data-table
+        id="data_table"
+        ref="data_table"
         :headers="headers"
         :items="datas"
         :items-per-page="-1"
@@ -303,7 +305,7 @@ export default {
     },
     // プレイ中のストーリー選択（ローディング処理あり）
     async set_select_story(row) {
-      if (this.setting.user == 1) return
+      if (this.setting.user == 'all') return
 
       const update_process = () => {
         this.loading = true
@@ -313,15 +315,12 @@ export default {
           let message = ''
           if (!cur_story) {
             row['story_' + this.setting.user] = 'x'
-            this.datas.unshift(row)   // プレイ中データを先頭データにする
             message = 'プレイ中を「' + story + '」に設定しました。'
           } else {
             cur_story['story_' + this.setting.user] = ''
-            this.datas.shift()  // 先頭データ（プレイ中データ削除）
             if (cur_story.story.split(' ')[0] != story) {
               message = 'プレイ中を「' + story + '」に設定しました。'
               row['story_' + this.setting.user] = 'x'
-              this.datas.unshift(row)   // プレイ中データを先頭データにする
             } else {
               message = 'プレイ中のストーリーを解除しました。'
             }
@@ -345,16 +344,6 @@ export default {
     set_select_user(event) {
       this.loading = true
       setTimeout(() => {
-        const cur_user_story = this.datas.find(e => e['story_' + this.setting.user] == 'x')  // 変更前のプレイ中ストーリー取得
-        const next_user_story = this.datas.find(e => e['story_' + event] == 'x')   // 変更後のプレイ中ストーリー取得
-        // 変更前にプレイ中ストーリーがある場合は削除
-        if (cur_user_story) {
-          this.datas.shift()
-        }
-        // 変更後のプレイ中ストーリーがある場合は追加
-        if (next_user_story) {
-          this.datas.unshift(next_user_story)
-        }
         this.setting.user = event   // ユーザ更新
         this.save_setting()
         this.loading = false
@@ -388,7 +377,7 @@ export default {
 
     // こころの数編集ページを開くための関数
     open_detail(monster_id) {
-      if (this.setting.user == '') return
+      if (this.setting.user == 'all') return
       let monster = this.get_monster(monster_id)
       monster.num_s = monster['s_' + this.setting.user]
       monster.num_a = monster['a_' + this.setting.user]
@@ -398,7 +387,7 @@ export default {
 
     // データ更新（色々なチェックは編集コンポーネントで）
     async update(monster) {
-      if (this.setting.user == '') return
+      if (this.setting.user == 'all') return
       monster['s_' + this.setting.user] = monster.num_s
       monster['a_' + this.setting.user] = monster.num_a
       monster['b_' + this.setting.user] = monster.num_b
@@ -411,7 +400,7 @@ export default {
 
     this.setting = { ...this.$store.state.setting }
     if (!this.setting.user || constants.users.findIndex(e => e.key == this.setting.user) < 0) {
-      this.setting.user = ''
+      this.setting.user = 'all'
     }
     // 選択したユーザIDを格納する処理をsetTimeout内で実行したいために分けている（set_select_user参照）
     this.selected_user = this.setting.user
@@ -424,11 +413,6 @@ export default {
       this.datas = res_story
       if (!this.setting.sort_asc) {
         this.datas = this.datas.reverse()
-      }
-      // プレイ中のストーリーを先頭データにする
-      const active_story = this.datas.find(e => e['story_' + this.setting.user] == 'x')
-      if (active_story) {
-        this.datas.unshift(active_story)
       }
 
       // ご当地モンスター列の追加
@@ -460,6 +444,20 @@ export default {
         }      
       })
       console.log("data loaded!")
+
+      // 自動スクロール
+      this.$nextTick(function() {
+        // selected_rowの存在チェック
+        const table_rows = document.querySelectorAll("tr")
+        for (let i = 0; i < table_rows.length; i++) {
+          if (table_rows[i].classList.contains('selected_row')) {
+            // スクロール
+            let options = { container: this.$refs.data_table.$el.querySelector('div.v-data-table__wrapper') }
+            this.$vuetify.goTo('.selected_row', options)
+            break
+          }
+        }
+      })
     }
 
     this.loading = false
@@ -520,6 +518,7 @@ export default {
 .selected_row {
   background-color: #E3F2FD !important;
 }
+/* 表の2行目を固定する場合（ヘッダの高さだけ下にずらしている） */
 .active_story {
   position: sticky !important;
   top: 3.5rem;
