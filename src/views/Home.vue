@@ -452,7 +452,7 @@ export default {
         for (let i = 0; i < table_rows.length; i++) {
           if (table_rows[i].classList.contains('selected_row')) {
             // スクロール
-            let options = { container: this.$refs.data_table.$el.querySelector('div.v-data-table__wrapper') }
+            let options = { duration: 0, container: this.$refs.data_table.$el.querySelector('div.v-data-table__wrapper') }
             this.$vuetify.goTo('.selected_row', options)
             break
           }
