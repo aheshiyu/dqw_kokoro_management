@@ -5,7 +5,7 @@
         <v-radio-group
           row
           v-model="selected_user"
-          @change="set_select"
+          @change="set_select_user"
         >
           <v-radio
             label="すべて"
@@ -13,9 +13,9 @@
           ></v-radio>
           <v-radio
             v-for="user in users"
-            :key="user.id"
+            :key="user.key"
             :label="user.name"
-            :value="user.id"
+            :value="user.key"
           ></v-radio>
         </v-radio-group>
       </v-row>
@@ -39,7 +39,7 @@
             :key="key"
             class="text-caption text-left font-weight-bold pa-1"
             :class="{ header_left: head.value=='story', header_other: head.value!='story' }"
-            :style="'min-width: ' + head.width + 'px'"
+            :style="'min-width: ' + head.width + 'px; height: 3.5rem'"
           >
             <!-- 並び替えボタン -->
             <div v-if="key == 0">
@@ -67,13 +67,14 @@
           </th>
         </template>
 
-        <template v-slot:item="{ item }">
+        <template v-slot:item="{ item, index }">
           <tr
-            :class="{ 'selected_row': (setting.user==2 && item.story_aheshiyu=='x') || (setting.user==3 && item.story_mikyan=='x') }"
+            :class="{ 'selected_row': (setting.user=='aheshiyu' && item.story_aheshiyu=='x') || (setting.user=='mikyan' && item.story_mikyan=='x'),
+                      'active_story': index==0 && ((setting.user=='aheshiyu' && item.story_aheshiyu=='x') || (setting.user=='mikyan' && item.story_mikyan=='x')) }"
           >
             <td
               class="px-1 font-weight-bold text-center"
-              :class="{ 'selected_row': (setting.user==2 && item.story_aheshiyu=='x') || (setting.user==3 && item.story_mikyan=='x') }"
+              :class="{ 'selected_row': (setting.user=='aheshiyu' && item.story_aheshiyu=='x') || (setting.user=='mikyan' && item.story_mikyan=='x') }"
               @click="set_select_story(item)"
             >
               <span>
@@ -282,9 +283,9 @@ export default {
       datas: [],
       monsters: [],
       users: constants.users,
-      selected_user: null,
+      selected_user: null,  // ユーザ選択用変数
       setting: {
-        user: null,
+        user: '',
         default_user: null,
         prefecture: null,
         sort_asc: false,
@@ -307,28 +308,20 @@ export default {
       const update_process = () => {
         this.loading = true
         setTimeout(() => {
-          let key = ''
-          switch (this.setting.user) {
-            case "2":
-              key = 'story_aheshiyu'
-              break
-            case "3":
-              key = 'story_mikyan'
-              break
-            default:
-              break
-          }
           const story = row.story.split(' ')[0]
-          const cur_story = this.datas.find(e => e[key] == 'x')
+          const cur_story = this.datas.find(e => e['story_' + this.setting.user] == 'x')
           let message = ''
           if (!cur_story) {
-            row[key] = 'x'
+            row['story_' + this.setting.user] = 'x'
+            this.datas.unshift(row)   // プレイ中データを先頭データにする
             message = 'プレイ中を「' + story + '」に設定しました。'
           } else {
-            cur_story[key] = ''
+            cur_story['story_' + this.setting.user] = ''
+            this.datas.shift()  // 先頭データ（プレイ中データ削除）
             if (cur_story.story.split(' ')[0] != story) {
               message = 'プレイ中を「' + story + '」に設定しました。'
-              row[key] = 'x'
+              row['story_' + this.setting.user] = 'x'
+              this.datas.unshift(row)   // プレイ中データを先頭データにする
             } else {
               message = 'プレイ中のストーリーを解除しました。'
             }
@@ -340,7 +333,7 @@ export default {
       }
 
       if (this.setting.user != this.setting.default_user) {
-        const user = constants.users.find(u => u.id == this.setting.user)
+        const user = constants.users.find(u => u.key == this.setting.user)
         if (await this.$refs.confirm.confirm('本当に更新しますか？', `${user.name}のプレイ中ストーリーを更新します。`)) {
           update_process()
         }
@@ -349,10 +342,20 @@ export default {
       }
     },
     // ユーザ選択処理（ローディングを挟むための処理）
-    set_select(event) {
+    set_select_user(event) {
       this.loading = true
       setTimeout(() => {
-        this.setting.user = event
+        const cur_user_story = this.datas.find(e => e['story_' + this.setting.user] == 'x')  // 変更前のプレイ中ストーリー取得
+        const next_user_story = this.datas.find(e => e['story_' + event] == 'x')   // 変更後のプレイ中ストーリー取得
+        // 変更前にプレイ中ストーリーがある場合は削除
+        if (cur_user_story) {
+          this.datas.shift()
+        }
+        // 変更後のプレイ中ストーリーがある場合は追加
+        if (next_user_story) {
+          this.datas.unshift(next_user_story)
+        }
+        this.setting.user = event   // ユーザ更新
         this.save_setting()
         this.loading = false
       }, 25);
@@ -385,45 +388,20 @@ export default {
 
     // こころの数編集ページを開くための関数
     open_detail(monster_id) {
+      if (this.setting.user == '') return
       let monster = this.get_monster(monster_id)
-      switch (this.setting.user) {
-        case "1":
-          break
-        case "2":
-          monster.num_s = monster.s_aheshiyu
-          monster.num_a = monster.a_aheshiyu
-          monster.num_b = monster.b_aheshiyu
-          this.$refs.kokoroDetail.open(monster)
-          break
-        case "3":
-          monster.num_s = monster.s_mikyan
-          monster.num_a = monster.a_mikyan
-          monster.num_b = monster.b_mikyan
-          this.$refs.kokoroDetail.open(monster)
-          break
-        default:
-          break
-      }
+      monster.num_s = monster['s_' + this.setting.user]
+      monster.num_a = monster['a_' + this.setting.user]
+      monster.num_b = monster['b_' + this.setting.user]
+      this.$refs.kokoroDetail.open(monster)
     },
 
     // データ更新（色々なチェックは編集コンポーネントで）
     async update(monster) {
-      switch (this.setting.user) {
-        case "1":
-          break
-        case "2":
-          monster.s_aheshiyu = monster.num_s
-          monster.a_aheshiyu = monster.num_a
-          monster.b_aheshiyu = monster.num_b
-          break
-        case "3":
-          monster.s_mikyan = monster.num_s
-          monster.a_mikyan = monster.num_a
-          monster.b_mikyan = monster.num_b
-          break
-        default:
-          break
-      }
+      if (this.setting.user == '') return
+      monster['s_' + this.setting.user] = monster.num_s
+      monster['a_' + this.setting.user] = monster.num_a
+      monster['b_' + this.setting.user] = monster.num_b
       await this.$gas.update_story(this.setting.user, monster)  // ユーザIDは文字列の状態で送信（GAS内の処理のため）
     },
   },
@@ -432,10 +410,10 @@ export default {
     this.loading = true
 
     this.setting = { ...this.$store.state.setting }
-    if (!this.setting.user) {
-      this.setting.user = '1'
+    if (!this.setting.user || constants.users.findIndex(e => e.key == this.setting.user) < 0) {
+      this.setting.user = ''
     }
-    // 選択したユーザIDを格納する処理をsetTimeout内で実行したいために分けている（set_select参照）
+    // 選択したユーザIDを格納する処理をsetTimeout内で実行したいために分けている（set_select_user参照）
     this.selected_user = this.setting.user
 
     const res_story = await this.$gas.get_story()
@@ -446,6 +424,11 @@ export default {
       this.datas = res_story
       if (!this.setting.sort_asc) {
         this.datas = this.datas.reverse()
+      }
+      // プレイ中のストーリーを先頭データにする
+      const active_story = this.datas.find(e => e['story_' + this.setting.user] == 'x')
+      if (active_story) {
+        this.datas.unshift(active_story)
       }
 
       // ご当地モンスター列の追加
@@ -536,5 +519,10 @@ export default {
 }
 .selected_row {
   background-color: #E3F2FD !important;
+}
+.active_story {
+  position: sticky !important;
+  top: 3.5rem;
+  z-index: 4 !important;
 }
 </style>

@@ -6,9 +6,9 @@
           <v-radio-group v-model="setting.user" row>
             <v-radio
               v-for="user in users"
-              :key="user.id"
+              :key="user.key"
               :label="user.name"
-              :value="user.id"
+              :value="user.key"
               @click="save_setting(); initialize()"
             ></v-radio>
           </v-radio-group>
@@ -251,7 +251,7 @@ export default {
       this.loading = true
 
       this.monsters = []
-      if (this.setting.user != 2 && this.setting.user != 3) {
+      if (constants.users.findIndex(u => u.key == this.setting.user) < 0) {
         this.setting.user = this.setting.default_user   // 「すべて」ページから「Additional」ページに来た時など
       }
       if (this.setting.user) {

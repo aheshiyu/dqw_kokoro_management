@@ -17,7 +17,7 @@
             v-model="setting.default_user"
             :items="users"
             item-text="name"
-            item-value="id"
+            item-value="key"
             menu-props="auto"
             label="デフォルトユーザ"
             no-data-text="データがありません。"

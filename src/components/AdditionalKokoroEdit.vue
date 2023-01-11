@@ -279,7 +279,7 @@ export default {
       }
       const setting = { ...this.$store.state.setting }
       if (setting.user != setting.default_user) {
-        const user = constants.users.find(u => u.id == setting.user)
+        const user = constants.users.find(u => u.key == setting.user)
         if (await this.$refs.confirm.confirm(`本当に${this.button_label}しますか？`, `${user.name}のこころを${this.button_label}します。`)) {
           save_process()
         }
