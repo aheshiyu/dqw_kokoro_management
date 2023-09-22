@@ -56,7 +56,7 @@
             </v-col>
           </v-row>
           <v-select
-            v-if="monster.type == 'イベント' || monster.type == 'その他'"
+            v-if="monster.type == 'イベント' || monster.type == '宝の地図' || monster.type == '覚醒千里行' || monster.type == 'その他'"
             v-model="monster.seen"
             :items="monster_seen"
             :menu-props="{ auto: true, contentClass: 'select_seen' }" 
@@ -227,7 +227,7 @@ export default {
       },
       initial_monster: null,
       monster_type: [
-        '強敵', 'ほこら', 'イベント', 'メガモン', 'その他'
+        '強敵', 'ほこら', 'イベント', 'メガモンスター', '宝の地図', '覚醒千里行', 'キラーゾーン', 'その他'
       ],
       color_list: [
         'red', 'yellow darken-1', 'blue', 'purple', 'light-green'
@@ -270,7 +270,7 @@ export default {
       const save_process = () => {
         if (this.$refs.form.validate()) {
           // 見かけやすさを設定しない種類の場合は既存の見かけやすさを削除する
-          if (!(this.monster.type == 'イベント' || this.monster.type == 'その他')) {
+          if (!(this.monster.type == 'イベント' || this.monster.type == '宝の地図' || this.monster.type == '覚醒千里行' || this.monster.type == 'その他')) {
             this.monster.seen = ''
           }
           this.$emit('save_monster', this.monster)

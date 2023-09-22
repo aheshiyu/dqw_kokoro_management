@@ -47,8 +47,32 @@
 
         <monster-section
           v-if="!loading && filter_megamon.length!=0"
-          :section_title="'メガモン'"
+          :section_title="'メガモンスター'"
           :monsters="filter_megamon"
+          @edit="edit_monster"
+          @delete="delete_monster"
+        ></monster-section>
+
+        <monster-section
+          v-if="!loading && filter_takaranochizu.length!=0"
+          :section_title="'宝の地図'"
+          :monsters="filter_takaranochizu"
+          @edit="edit_monster"
+          @delete="delete_monster"
+        ></monster-section>
+
+        <monster-section
+          v-if="!loading && filter_kakuseisenriko.length!=0"
+          :section_title="'覚醒千里行'"
+          :monsters="filter_kakuseisenriko"
+          @edit="edit_monster"
+          @delete="delete_monster"
+        ></monster-section>
+
+        <monster-section
+          v-if="!loading && filter_killerzone.length!=0"
+          :section_title="'キラーゾーン'"
+          :monsters="filter_killerzone"
           @edit="edit_monster"
           @delete="delete_monster"
         ></monster-section>
@@ -165,14 +189,23 @@ export default {
     filter_strong: function() {
       return this.monsters.filter(e => e.type == '強敵').sort((a, b) => a.cost - b.cost)
     },
-    filter_megamon: function() {
-      return this.monsters.filter(e => e.type == 'メガモン').sort((a, b) => a.cost - b.cost)
-    },
     filter_hokora: function() {
       return this.monsters.filter(e => e.type == 'ほこら').sort((a, b) => a.cost - b.cost)
     },
     filter_event: function() {
       return this.monsters.filter(e => e.type == 'イベント').sort((a, b) => a.cost - b.cost)
+    },
+    filter_megamon: function() {
+      return this.monsters.filter(e => e.type == 'メガモンスター').sort((a, b) => a.cost - b.cost)
+    },
+    filter_takaranochizu: function() {
+      return this.monsters.filter(e => e.type == '宝の地図').sort((a, b) => a.cost - b.cost)
+    },
+    filter_kakuseisenriko: function() {
+      return this.monsters.filter(e => e.type == '覚醒千里行').sort((a, b) => a.cost - b.cost)
+    },
+    filter_killerzone: function() {
+      return this.monsters.filter(e => e.type == 'キラーゾーン').sort((a, b) => a.cost - b.cost)
     },
     filter_other: function() {
       return this.monsters.filter(e => e.type == 'その他').sort((a, b) => a.cost - b.cost)

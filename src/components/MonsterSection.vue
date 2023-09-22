@@ -19,7 +19,7 @@
                 <v-icon v-else x-small :color="monster.color">mdi-checkbox-blank-circle</v-icon>
                 <span class="mb-0 text-caption pl-1">{{ monster.cost }}</span>
                 <span
-                  v-if="monster.type == 'イベント' || monster.type == 'その他'"
+                  v-if="monster.type == 'イベント' || monster.type == '宝の地図' || monster.type == '覚醒千里行' || monster.type == 'その他'"
                   class="mb-0 text-caption pl-1"
                 >
                   {{ monster.seen }}
