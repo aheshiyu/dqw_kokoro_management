@@ -187,28 +187,28 @@ export default {
 
   computed: {
     filter_strong: function() {
-      return this.monsters.filter(e => e.type == '強敵').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == '強敵').sort((a, b) => b.cost - a.cost)
     },
     filter_hokora: function() {
-      return this.monsters.filter(e => e.type == 'ほこら').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == 'ほこら').sort((a, b) => b.cost - a.cost)
     },
     filter_event: function() {
-      return this.monsters.filter(e => e.type == 'イベント').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == 'イベント').sort((a, b) => b.cost - a.cost)
     },
     filter_megamon: function() {
-      return this.monsters.filter(e => e.type == 'メガモンスター').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == 'メガモンスター').sort((a, b) => b.cost - a.cost)
     },
     filter_takaranochizu: function() {
-      return this.monsters.filter(e => e.type == '宝の地図').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == '宝の地図').sort((a, b) => b.cost - a.cost)
     },
     filter_kakuseisenriko: function() {
-      return this.monsters.filter(e => e.type == '覚醒千里行').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == '覚醒千里行').sort((a, b) => b.cost - a.cost)
     },
     filter_killerzone: function() {
-      return this.monsters.filter(e => e.type == 'キラーゾーン').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == 'キラーゾーン').sort((a, b) => b.cost - a.cost)
     },
     filter_other: function() {
-      return this.monsters.filter(e => e.type == 'その他').sort((a, b) => a.cost - b.cost)
+      return this.monsters.filter(e => e.type == 'その他').sort((a, b) => b.cost - a.cost)
     }
   },
 
@@ -252,7 +252,7 @@ export default {
     save_monster(monster) {
       if (monster.id == '') {
         monster.id = this.create_uuid().slice(0, 8)
-        this.monsters.push(monster)
+        this.monsters.unshift(monster)  // push→リスト下に追加。unshift→リスト上に追加（昇順降順のときに影響）
         this.snackbar_settings.message = 'データを追加しました。'
         this.snackbar_settings.snackbar = true
       } else {
